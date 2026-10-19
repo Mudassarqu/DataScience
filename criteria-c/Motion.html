@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Criterion C · Motion Sensor (PIR) Lab | Grade 9 DS PRO</title><link rel="stylesheet" href="../assets/site.css"><link rel="stylesheet" href="../assets/criteria-c.css"></head><body><div class="topbar"><a class="brand" href="../index.html">📊 AIA · Grade 9 DS PRO</a><a class="tab" href="../index.html">Home</a><a class="tab" href="../criteria-a.html">Criteria A</a><a class="tab" href="../criteria-b.html">Criteria B</a><a class="tab active" href="../criteria-c.html">Criteria C</a><a class="tab" href="../criteria-d.html">Criteria D</a></div><header class="hero c-hero">
+  <div class="crumbs"><a href="../index.html">Home</a> › <a href="../criteria-c.html">Criterion C</a> › Motion sensor (PIR)</div>
+  <span class="tag">Grade 9 · Data Science CV-Pro · Criterion C · C2 Technical skills</span>
+  <h1>🚶 Criterion C — Motion Sensor (PIR) Virtual Lab</h1>
+  <p>Your kit's real Arduino (ESP32) and Python code, running in the browser. Walk past a virtual sensor, change the thresholds, and link it to the Corner Swivel Watcher you designed in Criterion B. <strong>No hardware needed.</strong></p></header>
+<nav class="toc"><a href="#link">B → C Link</a><a href="#c1">C1 Plan</a><a href="#lab1">Lab 1 Arduino</a><a href="#lab2">Lab 2 Collect</a><a href="#lab3">Lab 3 Clean</a><a href="#lab4">Lab 4 Charts</a><a href="#lab5">Lab 5 Decide</a><a href="#c34">C3 · C4 Log</a><a href="#quiz">Quiz</a></nav>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your challenge answers and quiz scores to the class Google Sheet:</span>
+<input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off">
+<button onclick="doLogin()">Start / Log in</button></div><main><section id="link"><h2>Your Criterion B product → your Criterion C build</h2>
+<p class="sub">The PIR motion sensor sits inside your <strong>Motion Detection for Safer Spaces</strong> design (Criterion B, lesson SC5). Everything below (code, data, charts) runs <em>as that product</em>, with no hardware needed.</p>
+<div class="b2c" id="b2c"></div>
+<div class="callout" id="mission"></div>
+<div class="card" style="overflow-x:auto;"><h3 style="margin-top:0;color:var(--navy);">How your Criterion B specification becomes a Criterion C test</h3>
+<table><tr><th>Criterion B success criterion (ACCESSFM)</th><th>How you test it virtually in C</th><th>Evidence</th></tr><tbody id="b2cTable"></tbody></table></div></section>
+
+<section id="c1"><h2>C1 · Logical plan</h2><p class="sub">Plan the data journey before you code. Unlike the light sensor, a PIR gives a <strong>digital</strong> signal (0 or 1), so the interesting data is <em>how long</em> it stays on.</p>
+<div class="pipe">
+<div class="pb2"><b>1 · Sense</b>PIR output on GPIO 27 is HIGH (1) when it sees movement</div><div class="arr">→</div>
+<div class="pb2"><b>2 · Decide</b>ESP32 measures dwell time and picks a Status</div><div class="arr">→</div>
+<div class="pb2"><b>3 · Act</b>Relay (GPIO 25) switches the lights, buzzer (GPIO 26) can alert</div><div class="arr">→</div>
+<div class="pb2"><b>4 · Collect</b>Python reads one line per second and saves a CSV</div><div class="arr">→</div>
+<div class="pb2"><b>5 · Derive</b>pandas adds Rolling_Activity and Duty_Cycle_Pct</div><div class="arr">→</div>
+<div class="pb2"><b>6 · Chart &amp; decide</b>6 figures, then a decision for the school</div></div>
+<div class="challenge"><h4>🧩 Your turn — write your own C1 plan</h4><p><span class="lvl all">ALL</span> List the 6 steps in your own words, with the file or part used in each (sketch, relay, .py file, CSV).<br><span class="lvl most">MOST</span> Add the time each step will take and one thing that could go wrong (a flickering signal, a false trigger from a warm vent) and how you will check.<br><span class="lvl some">SOME</span> Add a flowchart with a decision diamond (is the motion still HIGH?).</p>
+<textarea id="resp-c1" placeholder="Step 1: ... Part/file: ... Time: ... Risk: ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C1','Write your own logical plan','resp-c1')">Save my answer</button><span class="save-status" id="status-c1"></span></div></div></section>
+
+<section id="lab1"><h2>C2 · Lab 1 — Virtual ESP32 + PIR (Arduino C++)</h2>
+<p class="sub">This is the real sketch from your kit, with <code>millis()</code> counting in milliseconds. <strong>Change the yellow boxes</strong>, then walk people past the sensor and watch the Serial Monitor, the relay light and the pin scope.</p>
+<div class="labgrid"><div>
+<div class="panel"><h4>🔌 Virtual hardware <span id="clockLbl" style="font-weight:600;color:#6a3fb5;"></span></h4><div class="pb">
+<svg class="hw" viewBox="0 0 520 250" role="img" aria-label="Person walking past a PIR sensor wired to an ESP32 with a relay light and a buzzer">
+<defs><radialGradient id="bulbglow"><stop offset="0" stop-color="#fff3a0"/><stop offset="1" stop-color="#ffd54a" stop-opacity="0"/></radialGradient></defs>
+<text x="60" y="28" font-size="12" fill="#445" text-anchor="middle">Corridor</text>
+<g id="person" transform="translate(30,95)"><circle cx="14" cy="10" r="10" fill="#6a3fb5"/><path d="M14 20 V58 M14 30 L2 46 M14 30 L26 46 M14 58 L4 82 M14 58 L24 82" stroke="#6a3fb5" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+<path id="irbeam" d="M150 150 L90 110 L90 190 Z" fill="#ff9d6e" opacity="0"/>
+<rect x="145" y="128" width="34" height="44" rx="8" fill="#e8e8f0" stroke="#7a7a99" stroke-width="2"/><circle id="pirDome" cx="150" cy="150" r="14" fill="#fff" stroke="#7a7a99" stroke-width="2"/><text x="162" y="190" font-size="11" fill="#445" text-anchor="middle">PIR</text>
+<path d="M179 150 H270" stroke="#444" stroke-width="3" fill="none"/>
+<rect x="270" y="70" width="130" height="150" rx="10" fill="#17324d" stroke="#0b1b2b" stroke-width="3"/><rect x="290" y="86" width="60" height="38" rx="4" fill="#6b7a8c"/><text x="320" y="110" text-anchor="middle" font-size="12" fill="#fff">ESP32</text>
+<circle cx="270" cy="150" r="5" fill="#ffd54a"/><text x="278" y="168" font-size="9" fill="#ffd54a">GPIO 27</text>
+<text x="335" y="205" text-anchor="middle" font-size="9" fill="#9fb4cc">relay 25 · buzzer 26</text>
+<path d="M400 110 H440" stroke="#444" stroke-width="3"/><path d="M400 185 H440" stroke="#444" stroke-width="3"/>
+<circle id="bulbHalo" cx="468" cy="90" r="44" fill="url(#bulbglow)" opacity="0"/><text x="468" y="102" font-size="40" text-anchor="middle" id="bulb">💡</text><text x="468" y="132" font-size="11" fill="#445" text-anchor="middle">Relay light</text>
+<text x="468" y="200" font-size="34" text-anchor="middle" id="buzz" opacity=".25">🔔</text><text x="468" y="222" font-size="11" fill="#445" text-anchor="middle">Buzzer</text>
+<text x="260" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#17324d" id="svgTitle">Corner Swivel Watcher</text></svg>
+<div class="read3"><div><small>MOTION PIN</small><span class="big" id="rdMot">–</span></div><div><small>DWELL (ms)</small><span class="big" id="rdDwell">–</span></div><div><small>STATUS</small><span class="chip" id="rdStatus">press Run</span><div style="font-size:.72rem;color:var(--muted);margin-top:3px;">millis() = <span id="rdMillis">0</span></div></div></div>
+<div class="device"><img id="devImg" alt="Criterion B product"><div><div class="st" id="devState">Waiting for data…</div><small id="devName"></small></div></div>
+<div class="ctl"><button class="go" id="runBtn">▶ Run virtual ESP32</button><button class="alt" id="walkBtn">🚶 Walk past (1.5 s)</button><button class="alt" id="standBtn">🧍 Stand still (6 s)</button><button class="alt" id="loiterBtn">🕴️ Loiter (12 s)</button></div>
+<div class="ctl"><button class="alt" id="dayBtn">📅 Play the whole scenario</button><label>Speed <select id="speedSel"><option value="1">1×</option><option value="5">5×</option><option value="10" selected>10×</option><option value="25">25×</option></select></label></div>
+</div></div>
+<div class="panel"><h4>🎛️ Hardware conditions <span style="font-weight:600;">(these are NOT in the code)</span></h4><div class="pb">
+<div class="slidebox"><label for="holdSl"><strong>PIR hold time</strong> (the blue pot on an HC-SR501): <span id="holdVal">2</span> s</label><input type="range" id="holdSl" min="1" max="5" step="0.5" value="2"></div>
+<div class="slidebox"><label for="bounceSl"><strong>Signal noise</strong>: chance each ms the line reads LOW by mistake: <span id="bounceVal">0</span> %</label><input type="range" id="bounceSl" min="0" max="60" value="0"></div>
+<div class="slidebox"><label for="falseSl"><strong>False triggers</strong> (warm air, sunlight) per minute: <span id="falseVal">0</span></label><input type="range" id="falseSl" min="0" max="6" value="0"></div>
+<div class="ctl"><button class="alt" id="cleanHw">✨ Clean signal</button><button class="alt" id="realHw">🔧 Noisy line (like my real data)</button></div></div></div>
+<div class="panel"><h4>✅ Missions <span id="missCount" style="font-weight:600;"></span></h4><div class="pb"><ul class="missions" id="missions"></ul></div></div>
+</div><div>
+<div class="panel"><h4>📄 motion-sensor.ino (ESP32) <span style="font-weight:600;color:#8a5a00;">yellow = you can edit</span></h4><div class="editnote">Real code from your kit (key parts). Edit a number and the virtual ESP32 uses it straight away.</div><pre class="code" id="ino"></pre></div>
+<div class="panel"><h4>🖥️ Serial Monitor (9600 baud) <span><button class="btn alt" id="clrBtn" style="padding:3px 10px;">Clear</button></span></h4><div class="serial" id="serial"></div></div>
+<div class="panel"><h4>🔬 Pin scope: the last 300 ms of the PIR line</h4><div class="pb" style="padding:6px;"><canvas id="scope" height="90" style="width:100%;background:#07121f;border-radius:8px;"></canvas><p class="legend" style="margin:6px 4px 0;">A clean signal is a flat line at 1 while someone is there. Raise the signal noise and watch it flicker.</p></div></div>
+</div></div>
+<div class="panel"><h4>📈 Last 40 telemetry lines: Motion (steps) and Dwell time (bars)</h4><div class="chartbox" style="height:230px;padding:6px;"><canvas id="liveChart"></canvas></div></div>
+<div class="panel"><h4>🧮 Which Status? Try the if / else if ladder yourself</h4><div class="pb"><div class="calc" id="calc"></div></div></div>
+<div class="panel"><h4>⚡ Extension — connect the sketch to your Criterion B product</h4><div class="editnote">These lines are <strong>not</strong> in the kit sketch. Add them to test a flicker fix and a security alert.</div><pre class="code" id="inoExt"></pre><div class="ctl" style="padding:8px 14px;"><label><input type="checkbox" id="tgAlert" checked> Enable the after-hours buzzer alert</label></div></div>
+<div class="challenge"><h4>🧩 Your turn — explain the sketch (C2)</h4><p><span class="lvl all">ALL</span> In your own words, what is <em>dwell time</em> and how does the sketch measure it? Use <code>millis()</code> in your answer.<br><span class="lvl most">MOST</span> Why does the code only set <code>motionStartTime</code> when the state changes from LOW to HIGH?<br><span class="lvl some">SOME</span> Choose thresholds for TRANSIT / ACTIVE / CONTINUOUS that suit a school corridor after hours and justify them.</p>
+<textarea id="resp-c2a" placeholder="Dwell time is ... The sketch measures it by ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab1','Explain the sketch','resp-c2a')">Save my answer</button><span class="save-status" id="status-c2 lab1"></span></div></div></section>
+
+<section id="lab2"><h2>C2 · Lab 2 — Collect data with Python (pyserial + regex)</h2>
+<p class="sub">Your sketch and hardware settings from Lab 1 now send 60 seconds of data. The script uses a <strong>regular expression</strong> to pull four values out of every line.</p>
+<div class="labgrid"><div>
+<div class="panel"><h4>🐍 1_data_collection_motion.py (key parts)</h4><div class="editnote">Edit the yellow boxes, then press Run.</div><pre class="code" id="py1"></pre></div>
+<div class="panel"><h4>⚙️ Simulator settings</h4><div class="pb">
+<div class="ctl"><label><input type="radio" name="src" value="sim" checked> Simulated (my corridor + my Lab 1 settings)</label><label><input type="radio" name="src" value="real"> Real kit data (teacher, 13 Oct)</label></div>
+<div class="ctl"><label>Garbled lines <input type="range" id="garbSl" min="0" max="8" value="1" style="width:110px;vertical-align:middle;"> <span id="garbVal">1</span></label></div>
+<div class="ctl"><button class="go" id="collectBtn">▶ Run collector</button><button class="alt" id="weatherBtn">🎲 New corridor day</button><button class="alt" id="dlRaw">⬇ Download this CSV</button></div></div></div>
+</div><div>
+<div class="panel"><h4>🖥️ Terminal output</h4><div class="consoleout" id="py1out" style="height:360px;max-height:360px;">Press ▶ Run collector…</div></div>
+<div class="panel"><h4>🔍 Step through parse_motion_line()</h4><div class="pb"><p style="margin-top:0;font-size:.88rem;">Edit the line, for example change <code>Motion: 1</code> to <code>Motion: 7</code> or cut it short, and see whether the regex still matches.</p>
+<input id="parseIn" style="width:100%;font:12.5px ui-monospace,Menlo,Consolas,monospace;padding:6px 8px;border:1px solid #b9c7d8;border-radius:6px;box-sizing:border-box;" value="Motion: 1  |  State: MOTION_DETECTED  |  Dwell_Time_ms: 2450  |  Status: ACTIVE_OCCUPANCY"><div class="consoleout" id="parseOut" style="margin-top:8px;border-radius:8px;max-height:260px;"></div></div></div>
+</div></div>
+<div class="challenge"><h4>🧩 Your turn — data collection (C2)</h4><p><span class="lvl all">ALL</span> Run the collector with a clean signal, then with the noisy signal. Compare the Dwell values in the terminal.<br><span class="lvl most">MOST</span> What does <code>([01])</code> match, and why is that safer than <code>(\d)</code>?<br><span class="lvl some">SOME</span> Why does the script store <code>Elapsed_Seconds</code> as well as the Timestamp?</p>
+<textarea id="resp-c2b" placeholder="With the noisy signal the dwell values were ... because ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab2','Data collection','resp-c2b')">Save my answer</button><span class="save-status" id="status-c2 lab2"></span></div></div></section>
+
+<section id="lab3"><h2>C2 · Lab 3 — Derive new columns &amp; analyse (pandas)</h2>
+<p class="sub">This script does not delete rows. It <strong>creates new columns</strong> (feature engineering). Change the window and divisor and see how the numbers react.</p>
+<div class="ctl"><strong style="color:var(--navy);">Dataset:</strong><label><input type="radio" name="ds" value="sim" checked> My simulated data (Lab 2)</label><label><input type="radio" name="ds" value="real"> Real kit data (teacher, 52 rows)</label></div>
+<div class="labgrid"><div>
+<div class="panel"><h4>🐍 2_clean_analyse_motion.py</h4><pre class="code" id="py2"></pre></div>
+<div class="kpis" id="cleanKpi"></div>
+</div><div>
+<div class="panel"><h4>🖥️ Terminal output</h4><div class="consoleout" id="py2out"></div></div>
+<div class="insight" id="dupNote"></div>
+</div></div>
+<div class="panel"><h4>🗂️ The rows with their new columns</h4><div class="dtable" id="dtable"></div></div>
+<div class="challenge"><h4>🧩 Your turn — new columns (C2)</h4><p><span class="lvl all">ALL</span> Set the divisor to 5 but leave the window at 10. What goes wrong with Duty_Cycle_Pct?<br><span class="lvl most">MOST</span> Why are Rolling_Activity and Duty_Cycle_Pct perfectly correlated (1.00)? Is it useful to keep both?<br><span class="lvl some">SOME</span> Why is the correlation between Motion_State and Dwell_Time_ms high even though dwell is created from motion?</p>
+<textarea id="resp-c2c" placeholder="When the divisor was 5 the duty cycle went above ... because ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab3','New columns','resp-c2c')">Save my answer</button><span class="save-status" id="status-c2 lab3"></span></div></div></section>
+
+<section id="lab4"><h2>C2 · Lab 4 — Visualise (matplotlib &amp; seaborn)</h2>
+<p class="sub">The six figures from <code>3_visualize_motion.py</code>, drawn live. Change the bins or the demand threshold and the chart updates.</p>
+<div class="tabsrow" id="figTabs"></div>
+<div class="labgrid"><div><div class="panel"><h4 id="figTitle">Figure</h4><div class="chartbox" id="chartbox"><canvas id="mainChart"></canvas></div><div class="ctl" style="padding:0 12px 10px;"><button class="alt" id="pngBtn">⬇ Save chart as PNG</button></div></div></div>
+<div><div class="panel"><h4>🐍 3_visualize_motion.py (this figure)</h4><pre class="code" id="py3" style="max-height:330px;"></pre></div><div class="insight" id="insight"></div></div></div>
+<div class="challenge"><h4>🧩 Your turn — read the chart (C2)</h4><p><span class="lvl all">ALL</span> In Figure 6, move the High Demand Threshold. When would the corridor be "busy" for <span class="scnName">your product</span>?<br><span class="lvl most">MOST</span> Look at Figure 2 and its x-axis label. Are the dwell values believable for a person in a corridor? Explain.<br><span class="lvl some">SOME</span> Why is the Figure 5 box a flat line for VACANT_STANDBY?</p>
+<textarea id="resp-c2d" placeholder="In Figure 2 the dwell times are ... so I think ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab4','Read the chart','resp-c2d')">Save my answer</button><span class="save-status" id="status-c2 lab4"></span></div></div></section>
+
+<section id="lab5"><h2>C2 · Lab 5 — Turn data into a community decision</h2>
+<p class="sub">Use your cleaned dataset to estimate what the <span class="scnName">product</span> would save and prevent.</p>
+<div class="card" id="impact"></div>
+<div class="challenge"><h4>🧩 Your turn — recommend an action (Interpretation)</h4><p><span class="lvl all">ALL</span> Write one recommendation for school security and building managers, using two numbers from above.<br><span class="lvl most">MOST</span> Say what your data cannot tell us (one minute of data, one corridor, no time of day).<br><span class="lvl some">SOME</span> Suggest a change to the Criterion B design or the code that would make the data more trustworthy.</p>
+<textarea id="resp-c2e" placeholder="Because lights were needed only ...% of the time, I recommend ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab5','Recommend an action','resp-c2e')">Save my answer</button><span class="save-status" id="status-c2 lab5"></span></div></div></section>
+
+<section id="c34"><h2>C3 · Follow the plan &nbsp;·&nbsp; C4 · Justify changes</h2>
+<p class="sub">Every time you edit a yellow box or move a hardware slider, it is recorded here automatically. Use this log as evidence of how you followed your plan and why you changed it.</p>
+<div class="card" style="overflow-x:auto;"><h3 style="margin-top:0;color:var(--navy);">📒 My automatic change log</h3><table class="logtable"><tr><th>#</th><th>Time</th><th>Lab</th><th>What I changed</th><th>From</th><th>To</th></tr><tbody id="logBody"></tbody></table>
+<div class="ctl"><button class="alt" id="logClear">Clear log</button></div></div>
+<div class="challenge"><h4>🧩 C3 — Did you follow your plan?</h4><p><span class="lvl all">ALL</span> Which labs did you complete, in what order, compared with your C1 plan?<br><span class="lvl most">MOST</span> Name one step that took longer than planned and say why.</p>
+<textarea id="resp-c3" placeholder="My plan said ... In reality I ..."></textarea><div class="row"><button onclick="saveWithLog('C3','Follow the plan','resp-c3')">Save my answer (with my log)</button><span class="save-status" id="status-c3"></span></div></div>
+<div class="challenge"><h4>🧩 C4 — Justify one change</h4><p><span class="lvl all">ALL</span> Choose one row of your log. What did you change and what happened?<br><span class="lvl most">MOST</span> Explain why the new value is better for <span class="scnName">your product</span>, using evidence from the Serial Monitor, table or a chart.<br><span class="lvl some">SOME</span> Say how you would test this change on the real kit.</p>
+<textarea id="resp-c4" placeholder="I changed ... from ... to ... because the data showed ..."></textarea><div class="row"><button onclick="saveWithLog('C4','Justify a change','resp-c4')">Save my answer (with my log)</button><span class="save-status" id="status-c4"></span></div></div></section>
+
+<section id="downloads"><h2>Downloads &amp; running it for real</h2>
+<p class="sub">When you have the kit, the real files below do exactly what the simulator showed.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;">
+<a class="dlbtn" href="../downloads/motion/motion-sensor.ino" download>⬇ motion-sensor.ino (ESP32 sketch)</a>
+<a class="dlbtn" href="../downloads/motion/1_data_collection_motion.py" download>⬇ 1_data_collection_motion.py</a>
+<a class="dlbtn" href="../downloads/motion/2_clean_analyse_motion.py" download>⬇ 2_clean_analyse_motion.py</a>
+<a class="dlbtn" href="../downloads/motion/3_visualize_motion.py" download>⬇ 3_visualize_motion.py</a>
+<a class="dlbtn" href="../downloads/motion/motion_telemetry_data.csv" download>⬇ motion_telemetry_data.csv (real raw)</a>
+<a class="dlbtn" href="../downloads/motion/motion_telemetry_clean.csv" download>⬇ motion_telemetry_clean.csv (real cleaned)</a></div>
+<div class="card" style="margin-top:14px;"><h3 style="margin-top:0;color:var(--navy);">Running it on the real kit</h3><ol class="steps"><li>Put <code>motion-sensor.ino</code> in a folder called <code>motion-sensor</code>, open it in the Arduino IDE, choose your ESP32 board and port, and upload. Wait for the 3-second PIR warm-up.</li><li>Run <code>pip install pyserial pandas numpy matplotlib seaborn</code>.</li><li>Close the Serial Monitor, set <code>SERIAL_PORT</code> in script 1, run it, walk past the sensor, then press Ctrl+C.</li><li>Run <code>python 2_clean_analyse_motion.py</code> then <code>python 3_visualize_motion.py</code>.</li></ol><p class="legend">Wiring (check your kit's guide): PIR VCC → 5 V (HC-SR501) or 3V3 (AM312), GND → GND, OUT → GPIO 27. Relay on GPIO 25, buzzer on GPIO 26.</p></div></section>
+
+<section id="quiz"><h2>Quiz — Motion sensor code</h2><p class="sub">Kahoot-style, timed, auto-marked, with an explanation after every answer. Your score is saved once you log in above.</p>
+<div class="quiz-card" id="quizCard"><div class="quiz-start" id="quizStart"><h3 style="margin-top:0;">🏁 Ready to play?</h3><p style="color:var(--muted);">10 questions · 15 seconds each · Arduino code, Python code and data skills.</p><button onclick="startQuiz()">Start Quiz</button></div>
+<div id="quizPlay" style="display:none;"><div class="quiz-head"><div class="qnum" id="qnum" style="color:#e8e8ff;">QUESTION 1</div><h3 class="qtext" id="qtext" style="color:#fff;">...</h3><div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div></div>
+<div class="quiz-body"><div class="opt-grid" id="optGrid"></div></div><div class="quiz-foot"><span>Score: <span class="score-pill" id="scorePill">0</span></span><span id="feedbackMsg"></span></div></div>
+<div class="quiz-result" id="quizResult" style="display:none;"><h3 style="margin-top:0;">🎉 Quiz complete!</h3><p style="font-size:1.4rem;font-weight:800;color:var(--navy);" id="finalScore">0 / 10</p><p id="submitStatus" class="save-status"></p><button onclick="startQuiz()">Play again</button><div class="lb-table" id="leaderboard"></div></div></div></section>
+<div class="pager"><a href="../criteria-c.html">← Criterion C: all sensors</a><a href="../lessons/SC5.html">Criterion B: Corner Swivel Watcher →</a></div></main><footer><p>AIA Grade 9 Digital Design · Data Science (CV-Pro): Python, Arduino and sensors for the UN SDGs</p>
+<p>Models are student-style exemplars. Sensor values and ranges follow the unit slides; check your own sensor and calibrate.</p></footer><script src="../assets/config.js"></script><script>window.LESSON = {"name": "Grade 9 Criterion C - Motion Sensor (PIR)", "quiz": [{"q": "What does the PIR sensor output on GPIO 27 when it sees movement?", "opts": ["A digital 1 (HIGH)", "An analogue number from 0 to 4095", "A temperature in \u00b0C", "The text 'MOTION'"], "correct": 0, "why": "A PIR gives a digital signal: HIGH (1) when it senses moving infrared, LOW (0) otherwise. Unlike the LDR there is no map() because there is nothing to scale."}, {"q": "Why is the loop checking `currentMotion == HIGH && lastMotionState == LOW`?", "opts": ["To count to 1000", "To detect the moment motion STARTS (a rising edge)", "To reset the baud rate", "To turn the buzzer on"], "correct": 1, "why": "Comparing now with the previous reading finds changes. LOW to HIGH is the start of an event, so the code stores motionStartTime and switches the relay on."}, {"q": "How is dwellDuration calculated while motion is HIGH?", "opts": ["now - motionStartTime", "TELEMETRY_INTERVAL * 2", "motionStartTime / 1000", "now + motionStartTime"], "correct": 0, "why": "millis() keeps counting. Subtracting the time the event started leaves how long the person has been there so far."}, {"q": "With thresholds 2000 and 6000, what Status does a dwell of exactly 2000 ms give?", "opts": ["CONTINUOUS_PRESENCE", "VACANT_STANDBY", "TRANSIT_PASSING", "ACTIVE_OCCUPANCY"], "correct": 2, "why": "The test is `> 2000`, which is strict. 2000 is not greater than 2000, so it falls to the else branch: TRANSIT_PASSING."}, {"q": "Why is the CONTINUOUS_PRESENCE test written BEFORE the ACTIVE_OCCUPANCY test?", "opts": ["Because 6000 is a prettier number", "It makes no difference", "Any dwell above 6000 is also above 2000, so the larger limit must be checked first", "Arduino reads code from the bottom"], "correct": 2, "why": "if / else if stops at the first true condition. If the 2000 test came first, 7000 ms would be labelled ACTIVE and never reach CONTINUOUS."}, {"q": "In the real data, Dwell_Time_ms is only 1 to 3 while Motion stays 1 for several seconds. What is the most likely reason?", "opts": ["The relay is broken", "The person walked very fast", "Python converted seconds to ms", "The signal flickers LOW for an instant, so the dwell timer keeps restarting"], "correct": 3, "why": "This is a hypothesis to test: each brief LOW resets dwellDuration to 0. The simulator reproduces it with signal noise, and a HOLD_MS filter fixes it. Confirm on the real kit with a scope or Serial prints."}, {"q": "What does `re.search(r'Dwell_Time_ms:\\s*(\\d+)', line)` capture?", "opts": ["The whole line", "One or more digits after 'Dwell_Time_ms:'", "Only the letter d", "The Status text"], "correct": 1, "why": "\\d+ means one or more digits and the brackets make it a capture group. group(1) returns them as text, and int() turns them into a number."}, {"q": "Rolling_Activity and Duty_Cycle_Pct have correlation 1.00. What does that tell you?", "opts": ["The sensor is perfect", "The data are wrong", "Motion causes the duty cycle", "They carry the same information: one is the other multiplied by a constant"], "correct": 3, "why": "Duty_Cycle_Pct = Rolling_Activity / 10 * 100, a straight-line rescale. A perfect correlation shows redundancy, not cause."}, {"q": "Why does the VACANT_STANDBY box in the boxplot look like a flat line?", "opts": ["The box plot is broken", "It has too many outliers", "Vacant means the data are missing", "Every dwell value is 0, so there is no spread"], "correct": 3, "why": "A box needs variation. When every value is 0, Q1, median and Q3 are all 0 and the box collapses."}, {"q": "Which change makes the Corner Swivel Watcher save more energy?", "opts": ["Print status more often", "Switch the lights on only while the PIR is HIGH", "Raise the baud rate", "Leave the relay on all night"], "correct": 1, "why": "The relay follows the PIR state, so lights are off whenever the corridor is empty. Lab 5 turns the share of empty time into kWh, AED and CO2."}]};window.C_IMG = {"SC5": {"iso": "../img/SC5_cb_iso.png", "exploded": "../img/SC5_exploded.png", "scene": "../img/SC5_scene.png", "page": "../lessons/SC5.html"}};</script><script src="../assets/site.js"></script><script src="../assets/chart.umd.js"></script><script src="../assets/ldrcore.js"></script><script src="../assets/mcore.js"></script><script src="../assets/motion_data.js"></script><script src="../assets/motion-ui.js"></script></body></html>

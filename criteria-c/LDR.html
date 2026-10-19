@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Criterion C · Light Detector (LDR) Lab | Grade 9 DS PRO</title><link rel="stylesheet" href="../assets/site.css"><link rel="stylesheet" href="../assets/criteria-c.css"></head><body><div class="topbar"><a class="brand" href="../index.html">📊 AIA · Grade 9 DS PRO</a><a class="tab" href="../index.html">Home</a><a class="tab" href="../criteria-a.html">Criteria A</a><a class="tab" href="../criteria-b.html">Criteria B</a><a class="tab active" href="../criteria-c.html">Criteria C</a><a class="tab" href="../criteria-d.html">Criteria D</a></div><header class="hero c-hero">
+  <div class="crumbs"><a href="../index.html">Home</a> › <a href="../criteria-c.html">Criterion C</a> › Light detector (LDR)</div>
+  <span class="tag">Grade 9 · Data Science CV-Pro · Criterion C · C2 Technical skills</span>
+  <h1>💡 Criterion C — Light Detector (LDR) Virtual Lab</h1>
+  <p>Real Arduino (ESP32) and Python code from your kit, running in the browser. Change the numbers, see the result, and link it to the product you designed in Criterion B. <strong>No hardware needed.</strong></p></header>
+<nav class="toc"><a href="#link">B → C Link</a><a href="#c1">C1 Plan</a><a href="#lab1">Lab 1 Arduino</a><a href="#lab2">Lab 2 Collect</a><a href="#lab3">Lab 3 Clean</a><a href="#lab4">Lab 4 Charts</a><a href="#lab5">Lab 5 Decide</a><a href="#c34">C3 · C4 Log</a><a href="#downloads">Downloads</a><a href="#quiz">Quiz</a></nav>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your challenge answers and quiz scores to the class Google Sheet:</span>
+<input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off">
+<button onclick="doLogin()">Start / Log in</button></div><main><section id="link"><h2>Your Criterion B product → your Criterion C build</h2>
+<p class="sub">The light detector (LDR) sits inside two of your Criterion B designs. Pick the one you are building. Everything below (code, data, charts) then runs <em>as that product</em>, with no hardware needed.</p>
+<div class="scn-pick" id="scnPick"></div>
+<div class="b2c" id="b2c"></div>
+<div class="callout" id="mission"></div>
+<div class="card" style="overflow-x:auto;"><h3 style="margin-top:0;color:var(--navy);">How your Criterion B specification becomes a Criterion C test</h3>
+<table><tr><th>Criterion B success criterion (ACCESSFM)</th><th>How you test it virtually in C</th><th>Evidence</th></tr><tbody id="b2cTable"></tbody></table></div></section>
+
+<section id="c1"><h2>C1 · Logical plan</h2><p class="sub">Before you code, plan the data journey. This is the same pipeline your real kit uses.</p>
+<div class="pipe">
+<div class="pb2"><b>1 · Sense</b>LDR on GPIO 36 gives a raw ADC number (low = bright!)</div><div class="arr">→</div>
+<div class="pb2"><b>2 · Convert</b>ESP32 sketch: map() to 0-100 %, decide DARK / DIM / BRIGHT / VERY BRIGHT</div><div class="arr">→</div>
+<div class="pb2"><b>3 · Send</b>Serial.println every 0.5 s at 9600 baud</div><div class="arr">→</div>
+<div class="pb2"><b>4 · Collect</b>Python reads the serial lines and saves a CSV</div><div class="arr">→</div>
+<div class="pb2"><b>5 · Clean</b>pandas removes bad rows and adds a moving average</div><div class="arr">→</div>
+<div class="pb2"><b>6 · Chart &amp; decide</b>6 figures, then an action for the community</div></div>
+<div class="challenge"><h4>🧩 Your turn — write your own C1 plan</h4><p><span class="lvl all">ALL</span> List the 6 steps above in your own words, with the file or tool used in each (sketch, .py file, CSV).<br><span class="lvl most">MOST</span> Add the <strong>time</strong> each step will take and one thing that could go wrong (for example a loose wire) with how you will check for it.<br><span class="lvl some">SOME</span> Add a flowchart with a decision diamond (is the light &lt; DARK threshold?).</p>
+<textarea id="resp-c1" placeholder="Step 1: ... File/tool: ... Time: ... Risk: ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C1','Write your own logical plan','resp-c1')">Save my answer</button><span class="save-status" id="status-c1"></span></div></div></section>
+
+<section id="lab1"><h2>C2 · Lab 1 — Virtual ESP32 + LDR (Arduino C++)</h2>
+<p class="sub">This is the real sketch from your kit. <strong>Change the yellow boxes</strong> and watch the Serial Monitor change. Move the light slider, press a preset, or play a whole day.</p>
+<div class="labgrid"><div>
+<div class="panel"><h4>🔌 Virtual hardware <span id="clockLbl" style="font-weight:600;color:#6a3fb5;"></span></h4><div class="pb">
+<svg class="hw" viewBox="0 0 520 250" id="hwsvg" role="img" aria-label="Light source shining on an LDR wired to an ESP32 with three LEDs">
+<defs><radialGradient id="glow"><stop offset="0" stop-color="#fff7b0"/><stop offset="1" stop-color="#ffd54a" stop-opacity="0"/></radialGradient></defs>
+<g id="rays"><circle id="halo" cx="70" cy="70" r="60" fill="url(#glow)" opacity="0"/><circle id="sun" cx="70" cy="70" r="22" fill="#ffc83d" stroke="#e59e00" stroke-width="3"/></g>
+<text x="70" y="118" text-anchor="middle" font-size="12" fill="#445">Light source</text>
+<g id="beam" opacity="0"><path d="M95 78 L195 112 L195 142 L95 100 Z" fill="#ffe27a" opacity=".45"/></g>
+<text id="hand" x="150" y="104" font-size="44" opacity="0">🖐️</text>
+<rect x="195" y="108" width="46" height="38" rx="8" fill="#b66a2c" stroke="#7a431a" stroke-width="2"/><path d="M203 127 l6 -9 l7 18 l7 -18 l6 9" fill="none" stroke="#f6d9b5" stroke-width="3"/>
+<text x="218" y="165" text-anchor="middle" font-size="12" fill="#445">LDR</text>
+<path d="M241 127 H290" stroke="#444" stroke-width="3" fill="none"/>
+<rect x="290" y="56" width="200" height="150" rx="10" fill="#17324d" stroke="#0b1b2b" stroke-width="3"/>
+<rect x="330" y="72" width="70" height="42" rx="4" fill="#6b7a8c"/><text x="365" y="98" text-anchor="middle" font-size="12" fill="#fff">ESP32</text>
+<circle cx="290" cy="127" r="5" fill="#ffd54a"/><text x="302" y="145" font-size="10" fill="#ffd54a">GPIO 36 (VP)</text>
+<text x="390" y="196" text-anchor="middle" font-size="10" fill="#9fb4cc">USB → Serial Monitor</text>
+<g id="ledsvg"><circle id="sR" cx="428" cy="88" r="10" fill="#555"/><circle id="sY" cx="456" cy="88" r="10" fill="#555"/><circle id="sG" cx="428" cy="116" r="10" fill="#555"/></g>
+<text x="448" y="122" font-size="9" fill="#9fb4cc">GPIO</text><text x="448" y="133" font-size="9" fill="#9fb4cc">25·26·27</text>
+<text x="260" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#17324d" id="svgTitle">Daylight Sun-Tracker Post</text></svg>
+<div class="read3"><div><small>RAW ADC</small><span class="big" id="rdRaw">–</span></div><div><small>LIGHT %</small><span class="big" id="rdPct">–</span><div class="bar"><i id="rdBar"></i></div></div><div><small>CONDITION</small><span class="chip" id="rdCond">press Run</span></div></div>
+<div class="device"><img id="devImg" alt="Criterion B product"><div><div class="st" id="devState">Waiting for data…</div><small id="devName"></small><div class="leds"><span class="led r" id="lR"></span><span class="led y" id="lY"></span><span class="led g" id="lG"></span></div></div></div>
+<div class="slidebox"><label for="wSlider"><strong>☀️ Light reaching the LDR (the real world)</strong> <span id="wVal">0</span> %</label><input type="range" id="wSlider" min="0" max="100" value="0"><div class="row2"><span>pitch dark</span><span>direct sunlight / torch</span></div></div>
+<div class="ctl" id="presets"></div>
+<div class="ctl"><button class="go" id="runBtn">▶ Run virtual ESP32</button><button class="alt" id="dayBtn">📅 Play the whole scenario</button><label>Speed <select id="speedSel"><option value="1">1×</option><option value="5">5×</option><option value="10" selected>10×</option><option value="25">25×</option></select></label><label>Sensor noise <input type="range" id="noiseSl" min="0" max="60" value="8" style="width:110px;vertical-align:middle;"> <span id="noiseVal">8</span></label></div>
+</div></div>
+<div class="panel"><h4>✅ Missions <span id="missCount" style="font-weight:600;"></span></h4><div class="pb"><ul class="missions" id="missions"></ul></div></div>
+</div><div>
+<div class="panel"><h4>📄 light-detection.ino (ESP32) <span style="font-weight:600;color:#8a5a00;">yellow = you can edit</span></h4><div class="editnote">Real code from your kit. Edit a number and the virtual ESP32 uses it straight away.</div><pre class="code" id="ino"></pre></div>
+<div class="panel"><h4>🖥️ Serial Monitor (9600 baud) <span><button class="btn alt" id="clrBtn" style="padding:3px 10px;">Clear</button></span></h4><div class="serial" id="serial"></div></div>
+</div></div>
+<div class="panel"><h4>📈 Live Light % (last 60 readings)</h4><div class="chartbox" style="height:230px;padding:6px;"><canvas id="liveChart"></canvas></div></div>
+<div class="panel"><h4>🧮 Do the map() maths yourself</h4><div class="pb"><div class="calc" id="calc"></div></div></div>
+<div class="panel"><h4>⚡ Extension — link the sketch to your Criterion B product</h4><div class="editnote">Add this to the end of loop(). The LED colours and the message on the model above follow your numbers.</div><pre class="code" id="inoExt"></pre></div>
+<div class="challenge"><h4>🧩 Your turn — explain the sketch (C2)</h4><p><span class="lvl all">ALL</span> In your own words, what do <code>map()</code> and <code>constrain()</code> do to the raw reading?<br><span class="lvl most">MOST</span> Why does a <em>low</em> raw number mean <em>bright</em>? Use the LDR in your answer.<br><span class="lvl some">SOME</span> Choose better thresholds for your product and justify them with data from the Serial Monitor.</p>
+<textarea id="resp-c2a" placeholder="map() takes the raw reading ... constrain() makes sure ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab1','Explain the sketch','resp-c2a')">Save my answer</button><span class="save-status" id="status-c2 lab1"></span></div></div></section>
+
+<section id="lab2"><h2>C2 · Lab 2 — Collect data with Python (pyserial)</h2>
+<p class="sub">Your sketch from Lab 1 (with your edits!) now sends 100 readings. The Python script reads each line, <strong>parses</strong> it and saves a CSV. You choose the data source and add real-world faults.</p>
+<div class="labgrid"><div>
+<div class="panel"><h4>🐍 1_data_collection_ldr.py (the key parts)</h4><div class="editnote">Edit the yellow boxes, then press Run.</div><pre class="code" id="py1"></pre></div>
+<div class="panel"><h4>⚙️ Simulator settings</h4><div class="pb">
+<div class="ctl"><label><input type="radio" name="src" value="sim" checked> Simulated (my scenario)</label><label><input type="radio" name="src" value="real"> Real kit data (teacher, 13 Oct)</label></div>
+<div class="ctl"><label>Faulty-wire spikes (4095) <input type="range" id="spikeSl" min="0" max="10" value="3" style="width:120px;vertical-align:middle;"> <span id="spikeVal">3</span></label><label>Garbled lines <input type="range" id="garbSl" min="0" max="8" value="2" style="width:100px;vertical-align:middle;"> <span id="garbVal">2</span></label></div>
+<div class="ctl"><button class="go" id="collectBtn">▶ Run collector</button><button class="alt" id="weatherBtn">🌦️ New weather / new day</button><button class="alt" id="dlRaw">⬇ Download this CSV</button></div></div></div>
+</div><div>
+<div class="panel"><h4>🖥️ Terminal output</h4><div class="consoleout" id="py1out" style="height:360px;max-height:360px;">Press ▶ Run collector…</div></div>
+<div class="panel"><h4>🔍 Step through parse_ldr_line()</h4><div class="pb"><p style="margin-top:0;font-size:.88rem;">Type or edit a serial line. Try breaking it (delete a <code>|</code>, or cut it in half) and see what the function returns.</p>
+<input id="parseIn" style="width:100%;font:12.5px ui-monospace,Menlo,Consolas,monospace;padding:6px 8px;border:1px solid #b9c7d8;border-radius:6px;box-sizing:border-box;" value="Raw ADC: 420  |  Light %: 35%  |  Condition: DIM  (indoor shade or twilight)"><div class="consoleout" id="parseOut" style="margin-top:8px;border-radius:8px;max-height:260px;"></div></div></div>
+</div></div>
+<div class="challenge"><h4>🧩 Your turn — data collection (C2)</h4><p><span class="lvl all">ALL</span> Run the collector with 0 spikes and 0 garbled lines, then with 5 of each. What changed in the terminal?<br><span class="lvl most">MOST</span> Why does the script use <code>try / except</code> and <code>if raw_adc is not None</code>?<br><span class="lvl some">SOME</span> Explain what <code>time.sleep(2)</code> and <code>ser.reset_input_buffer()</code> are for.</p>
+<textarea id="resp-c2b" placeholder="With 5 spikes ... because ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab2','Data collection','resp-c2b')">Save my answer</button><span class="save-status" id="status-c2 lab2"></span></div></div></section>
+
+<section id="lab3"><h2>C2 · Lab 3 — Clean &amp; analyse (pandas)</h2>
+<p class="sub">Raw data is never perfect. Switch each cleaning step on and off, change the numbers, and see which rows are removed and how the statistics change.</p>
+<div class="ctl"><strong style="color:var(--navy);">Dataset:</strong><label><input type="radio" name="ds" value="sim" checked> My simulated data (Lab 2)</label><label><input type="radio" name="ds" value="real"> Real raw data (teacher, 55 rows)</label><label><input type="radio" name="ds" value="realclean"> Real cleaned file (62 rows, used for Figures 1-6)</label></div>
+<div class="labgrid"><div>
+<div class="panel"><h4>🐍 2_clean_analyse_ldr.py <span style="font-weight:600;color:#8a5a00;">tick a box to switch a step on/off</span></h4><div class="ctl" style="padding:8px 12px;margin:0;border-bottom:1px solid var(--line);">
+<label><input type="checkbox" id="tgMissing" checked> Step 3 drop missing</label><label><input type="checkbox" id="tgRange" checked> Step 4 valid range</label><label><input type="checkbox" id="tgZ" checked> Step 5 z-score</label></div><pre class="code" id="py2"></pre></div>
+<div class="kpis" id="cleanKpi"></div>
+</div><div>
+<div class="panel"><h4>🖥️ Terminal output</h4><div class="consoleout" id="py2out"></div></div>
+</div></div>
+<div class="panel"><h4>🗂️ The rows (red = removed by your cleaning code)</h4><div class="dtable" id="dtable"></div></div>
+<div class="challenge"><h4>🧩 Your turn — clean the data (C2)</h4><p><span class="lvl all">ALL</span> Add 8 spikes in Lab 2, then switch the z-score step off. Do the mean and max change? Why?<br><span class="lvl most">MOST</span> Find a z-score limit that removes the spikes but keeps the real dark readings. Explain your choice.<br><span class="lvl some">SOME</span> Why is the median a better "typical value" than the mean when there are spikes?</p>
+<textarea id="resp-c2c" placeholder="When I switched the z-score off the mean ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab3','Clean the data','resp-c2c')">Save my answer</button><span class="save-status" id="status-c2 lab3"></span></div></div></section>
+
+<section id="lab4"><h2>C2 · Lab 4 — Visualise (matplotlib &amp; seaborn)</h2>
+<p class="sub">The six figures from <code>3_visualize_ldr.py</code>, drawn live from the cleaned data. Change the thresholds or bins and the chart updates.</p>
+<div class="tabsrow" id="figTabs"></div>
+<div class="labgrid"><div><div class="panel"><h4 id="figTitle">Figure</h4><div class="chartbox" id="chartbox"><canvas id="mainChart"></canvas></div><div class="ctl" style="padding:0 12px 10px;"><button class="alt" id="pngBtn">⬇ Save chart as PNG</button></div></div></div>
+<div><div class="panel"><h4>🐍 3_visualize_ldr.py (this figure)</h4><pre class="code" id="py3" style="max-height:330px;"></pre></div><div class="insight" id="insight"></div></div></div>
+<div class="challenge"><h4>🧩 Your turn — read the chart (C2)</h4><p><span class="lvl all">ALL</span> Change the bright/dark threshold lines in Figure 1. What would the lines mean for <span class="scnName">your product</span>?<br><span class="lvl most">MOST</span> Compare the mean and median in Figure 4. Which better describes "typical light"?<br><span class="lvl some">SOME</span> Why does the red line in Figure 6 dip below 0 % when the dots never do?</p>
+<textarea id="resp-c2d" placeholder="In Figure 4 the mean is ... but the median is ... so ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab4','Read the chart','resp-c2d')">Save my answer</button><span class="save-status" id="status-c2 lab4"></span></div></div></section>
+
+<section id="lab5"><h2>C2 · Lab 5 — Turn data into a community decision</h2>
+<p class="sub">Technical skills only matter if the data changes something. Use <em>your</em> cleaned dataset and your thresholds to estimate the impact of the <span class="scnName">product</span>.</p>
+<div class="card" id="impact"></div>
+<div class="challenge"><h4>🧩 Your turn — recommend an action (Interpretation)</h4><p><span class="lvl all">ALL</span> Write one recommendation for <span id="usersName">the community</span>, using two numbers from above.<br><span class="lvl most">MOST</span> Say what your data cannot tell us (for example only one day, one place).<br><span class="lvl some">SOME</span> Suggest a change to the Criterion B design or the code that would make the data more trustworthy.</p>
+<textarea id="resp-c2e" placeholder="Because ...% of readings were ..., I recommend ..."></textarea>
+<div class="row"><button onclick="saveChallenge('C2 Lab5','Recommend an action','resp-c2e')">Save my answer</button><span class="save-status" id="status-c2 lab5"></span></div></div></section>
+
+<section id="c34"><h2>C3 · Follow the plan &nbsp;·&nbsp; C4 · Justify changes</h2>
+<p class="sub">Every time you edit a yellow box, it is recorded here automatically. Use this log as evidence of how you followed your plan and why you changed it.</p>
+<div class="card" style="overflow-x:auto;"><h3 style="margin-top:0;color:var(--navy);">📒 My automatic change log</h3><table class="logtable"><tr><th>#</th><th>Time</th><th>Lab</th><th>What I changed</th><th>From</th><th>To</th></tr><tbody id="logBody"><tr><td colspan="6" style="color:var(--muted);">No changes yet. Edit a yellow box in a lab above.</td></tr></tbody></table>
+<div class="ctl"><button class="alt" id="logClear">Clear log</button></div></div>
+<div class="challenge"><h4>🧩 C3 — Did you follow your plan?</h4><p><span class="lvl all">ALL</span> Which labs did you complete, in what order, compared with your C1 plan?<br><span class="lvl most">MOST</span> Name one step that took longer than planned and say why.</p>
+<textarea id="resp-c3" placeholder="My plan said ... In reality I ..."></textarea><div class="row"><button onclick="saveWithLog('C3','Follow the plan','resp-c3')">Save my answer (with my log)</button><span class="save-status" id="status-c3"></span></div></div>
+<div class="challenge"><h4>🧩 C4 — Justify one change</h4><p><span class="lvl all">ALL</span> Choose one row of your log. What did you change and what happened?<br><span class="lvl most">MOST</span> Explain why the new value is better for <span class="scnName">your product</span>, using evidence from the Serial Monitor, table or a chart.<br><span class="lvl some">SOME</span> Say how you would test this change on the real kit.</p>
+<textarea id="resp-c4" placeholder="I changed ... from ... to ... because the data showed ..."></textarea><div class="row"><button onclick="saveWithLog('C4','Justify a change','resp-c4')">Save my answer (with my log)</button><span class="save-status" id="status-c4"></span></div></div></section>
+
+<section id="downloads"><h2>Downloads &amp; running it for real</h2>
+<p class="sub">When you have the kit, the real files below do exactly what the simulator showed.</p>
+<div class="dl-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;">
+<a class="dlbtn" href="../downloads/ldr/light-detection.ino" download>⬇ light-detection.ino (ESP32 sketch)</a>
+<a class="dlbtn" href="../downloads/ldr/1_data_collection_ldr.py" download>⬇ 1_data_collection_ldr.py</a>
+<a class="dlbtn" href="../downloads/ldr/2_clean_analyse_ldr.py" download>⬇ 2_clean_analyse_ldr.py</a>
+<a class="dlbtn" href="../downloads/ldr/3_visualize_ldr.py" download>⬇ 3_visualize_ldr.py</a>
+<a class="dlbtn" href="../downloads/ldr/ldr_light_data.csv" download>⬇ ldr_light_data.csv (real raw)</a>
+<a class="dlbtn" href="../downloads/ldr/ldr_light_clean.csv" download>⬇ ldr_light_clean.csv (real cleaned)</a></div>
+<div class="card" style="margin-top:14px;"><h3 style="margin-top:0;color:var(--navy);">Running it on the real kit</h3><ol class="steps"><li>Put <code>light-detection.ino</code> in a folder called <code>light-detection</code>, open it in the Arduino IDE, choose your ESP32 board and port, and upload.</li><li>Open a terminal and run <code>pip install pyserial pandas numpy matplotlib seaborn</code>.</li><li>Close the Serial Monitor (only one program can use the port), set <code>COM_PORT</code> in script 1, then run <code>python 1_data_collection_ldr.py</code>.</li><li>Run <code>python 2_clean_analyse_ldr.py</code>, then <code>python 3_visualize_ldr.py</code> to create your six figures.</li></ol><p class="legend">Wiring (check your kit's guide): LDR module VCC → 3V3, GND → GND, signal → GPIO 36 (VP).</p></div></section>
+
+<section id="quiz"><h2>Quiz — Light sensor code</h2><p class="sub">Kahoot-style, timed, auto-marked. Your score is saved once you log in above.</p>
+<div class="quiz-card" id="quizCard"><div class="quiz-start" id="quizStart"><h3 style="margin-top:0;">🏁 Ready to play?</h3><p style="color:var(--muted);">10 questions · 15 seconds each · Arduino code, Python code and data skills.</p><button onclick="startQuiz()">Start Quiz</button></div>
+<div id="quizPlay" style="display:none;"><div class="quiz-head"><div class="qnum" id="qnum" style="color:#e8e8ff;">QUESTION 1</div><h3 class="qtext" id="qtext" style="color:#fff;">...</h3><div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div></div>
+<div class="quiz-body"><div class="opt-grid" id="optGrid"></div></div><div class="quiz-foot"><span>Score: <span class="score-pill" id="scorePill">0</span></span><span id="feedbackMsg"></span></div></div>
+<div class="quiz-result" id="quizResult" style="display:none;"><h3 style="margin-top:0;">🎉 Quiz complete!</h3><p style="font-size:1.4rem;font-weight:800;color:var(--navy);" id="finalScore">0 / 10</p><p id="submitStatus" class="save-status"></p><button onclick="startQuiz()">Play again</button><div class="lb-table" id="leaderboard"></div></div></div></section>
+<div class="pager"><a href="../criteria-c.html">← Criterion C: all sensors</a><a href="../lessons/CA3.html">Criterion B: Daylight Tracker →</a></div></main><footer><p>AIA Grade 9 Digital Design · Data Science (CV-Pro): Python, Arduino and sensors for the UN SDGs</p>
+<p>Models are student-style exemplars. Sensor values and ranges follow the unit slides; check your own sensor and calibrate.</p></footer><script src="../assets/config.js"></script><script>window.LESSON = {"name": "Grade 9 Criterion C - LDR Light Detector", "quiz": [{"q": "In the sketch, what does a LOW raw ADC number from the LDR mean?", "opts": ["More light: it is BRIGHT", "It is dark", "The sensor is unplugged", "The battery is low"], "correct": 0, "why": "The LDR circuit is inverted: more light gives a LOWER voltage, so a low ADC number means bright. Your own data show raw 0 for torch light and about 690 when covered."}, {"q": "What does map(lightValue, 650, 0, 0, 100) do?", "opts": ["Adds 650 to the reading", "Sets the baud rate to 650", "Turns a raw reading of 650 into 0 % and 0 into 100 %", "Makes the loop run 650 times"], "correct": 2, "why": "map(x, 650, 0, 0, 100) rescales the range 650\u21920 onto 0\u2192100. For raw 325: (325\u2212650)\u00d7100 \u00f7 (0\u2212650) = 50, so 50 %. Raw 650 gives 0 % and raw 0 gives 100 %."}, {"q": "Why is constrain(lightPercent, 0, 100) used after map()?", "opts": ["To print the text on the monitor", "To change the pin number", "To make the code run faster", "To stop the percentage going below 0 or above 100"], "correct": 3, "why": "Raw readings above 650 would make map() return negative numbers (raw 800 gives \u221223). constrain() clips the result to 0\u2013100 so the percentage always makes sense."}, {"q": "Which ESP32 pin is the LDR connected to in the sketch?", "opts": ["Pin 100", "Pin 650", "Pin 9600", "Pin 36 (VP)"], "correct": 3, "why": "The sketch says const int LDR_PIN = 36; and analogRead(LDR_PIN) reads GPIO 36 (also called VP). 9600 is the baud rate, not a pin."}, {"q": "What does Serial.begin(9600) set, and why must Python use the same number?", "opts": ["The brightness of the LED", "The number of readings", "The baud rate: both sides must send and listen at the same speed", "The password for the board"], "correct": 2, "why": "Serial.begin(9600) sets the baud rate (bits per second). If Python opens the port at a different speed the text arrives as garbage, which is why BAUD_RATE = 9600 appears in both files."}, {"q": "What does line_str.split('|') do in parse_ldr_line()?", "opts": ["Deletes the | characters and the numbers", "Converts the text to a graph", "Cuts the text into parts at every | character", "Sends the line back to the ESP32"], "correct": 2, "why": "split('|') cuts the line into three pieces at each | character. Then replace() and strip() clean each piece so int() can turn the number text into a number."}, {"q": "Why remove rows with a z-score of 3 or more?", "opts": ["They are always correct", "They are the oldest readings", "They are extreme outliers, such as spikes from a loose wire", "They are the brightest readings"], "correct": 2, "why": "A z-score says how many standard deviations a reading is from the mean. 3 or more is very unusual, such as 4095 from a floating wire, so the script removes it before calculating statistics."}, {"q": "What does a 5-sample moving average do to the Light % line?", "opts": ["Sorts the readings from low to high", "Smooths short flickers by averaging the last 5 readings", "Deletes every fifth reading", "Makes every reading 5 times bigger"], "correct": 1, "why": "A moving average replaces each point with the average of the last 5 readings. Short flickers (a hand passing the sensor) are smoothed out, so the orange line shows the trend."}, {"q": "Which chart best shows how light changed over a day?", "opts": ["A pie chart of conditions", "A line chart of Light % against sample number", "A single number", "A photo of the sensor"], "correct": 1, "why": "Light % changes continuously with time, and a line chart joins points in time order. A pie chart or single number cannot show change."}, {"q": "In Figure 6 the red line dips below 0 % but the dots never do. Why?", "opts": ["The LDR measures negative light", "The sensor was broken", "map() then constrain() flatten all dark readings at exactly 0 %, so the data are not a perfect straight line", "Python made a mistake"], "correct": 2, "why": "map() can give values below 0 but constrain() flattens them to exactly 0 %, so many dots sit on 0 %. A straight line fitted through all dots keeps going down and dips below 0 %. The data are only partly linear."}]};window.C_IMG = {"CA3": {"iso": "../img/CA3_cc_iso.png", "exploded": "../img/CA3_exploded.png", "scene": "../img/CA3_scene.png", "page": "../lessons/CA3.html"}, "GH1": {"iso": "../img/GH1_cc_iso.png", "exploded": "../img/GH1_exploded.png", "scene": "../img/GH1_scene.png", "page": "../lessons/GH1.html"}};</script><script src="../assets/site.js"></script><script src="../assets/chart.umd.js"></script><script src="../assets/ldrcore.js"></script><script src="../assets/ldr_data.js"></script><script src="../assets/ldr-ui.js"></script></body></html>
