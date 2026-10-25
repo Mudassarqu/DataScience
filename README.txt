@@ -1,1 +1,4 @@
-Upload the contents of this folder into the root of the DataScience GitHub repository (Add file > Upload files). It adds criteria-a-CA1.html ... criteria-a-ZH9.html plus img/ca/ and docs/ca/, and replaces criteria-a.html (the old 'Coming soon' page). Also upload the separate index.html to replace the home page so the Criteria A card says '19 exemplars live'. No other site files change.
+STYLE FIX · upload in ONE batch (75 files)
+Drag everything in this folder (the .html files and the assets folder) into the ROOT of the repo.
+Commit, wait about 1 minute, then press Ctrl+F5 on criteria-c.html.
+Nothing else needs uploading.

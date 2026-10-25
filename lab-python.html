@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 2 · Python data lab | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/dspro.css">
+<style>
+.steps{display:flex;flex-wrap:wrap;gap:8px}.steps button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;font-weight:700;cursor:pointer;display:flex;gap:6px;align-items:center}
+.steps button.on{background:var(--navy);color:#fff;border-color:var(--navy)}.steps button .d{color:var(--ok);font-weight:800}
+.steps button.on .d{color:#7be3a2}
+.hint{background:#fff7e0;border:1px solid #f0d58a;border-radius:9px;padding:8px 12px;margin-top:8px;color:#4a3a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hint{background:#3a2f10;border-color:#6b5520;color:#f6e3a8}}
+.out{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:10px 12px;font:13px/1.5 Consolas,Menlo,monospace;min-height:80px;max-height:240px;overflow:auto;white-space:pre-wrap}.out .err{color:#ff9d8f}
+table.dt{border-collapse:collapse;width:100%;font:12.5px Consolas,Menlo,monospace}table.dt th,table.dt td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left}table.dt th{background:var(--navy);color:#fff;position:sticky;top:0}
+table.dt tr.bad td{background:#fde8e4;color:#7a1d12}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) table.dt tr.bad td{background:#4a1d17;color:#ffc2b8}}
+.scroll{max-height:250px;overflow:auto;border-radius:8px;border:1px solid var(--line)}
+.fig{margin:0}.fig figcaption{font-size:.84rem;color:var(--muted);margin-top:4px}
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media (max-width:700px){.charts{grid-template-columns:1fr}}
+.lock{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted)}
+textarea.ans{width:100%;min-height:70px;box-sizing:border-box;border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit;background:var(--panel);color:var(--ink)}
+.win{background:#effaf3;border:1px solid #9bd8b4;color:#14532d;border-radius:10px;padding:10px 14px;margin-top:10px}
+</style></head><body>
+<div id="dsnav" data-tab="lab2" data-lesson="light"></div>
+<div class="top"><div class="in"><div><span class="tag">C2 Technical skills · Python</span><h1>Lab 2 · Python data lab</h1></div><p>Collect, clean, analyse and chart light-sensor data with Python, the same steps as your kit scripts 1, 2 and 3. Everything runs in your browser.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
+<div class="wrapx"><div class="g2">
+<div class="col">
+ <section class="panel"><h2>Choose your data</h2>
+  <div class="row"><select id="dsel" aria-label="Dataset"><option value="kit">📟 My kit's real readings (55 rows, teacher-recorded)</option><option value="messy">🧪 Messy practice set (100 rows, synthetic, full of faults)</option><option value="lab1">🔌 Readings from Lab 1 (Virtual ESP32)</option></select><span class="note" id="dnote"></span></div></section>
+ <section class="panel"><div class="steps" id="steps" role="tablist"></div></section>
+ <section class="panel"><h2 id="sTitle"></h2><div id="sGoal"></div><div id="hintBox"></div>
+  <div class="editor" style="margin-top:10px"><pre class="gutter" id="gutter"></pre><textarea id="code" class="code" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python code editor"></textarea></div>
+  <div class="row" style="margin-top:10px"><button class="btn run" id="checkBtn" disabled>✔ Check my code</button><button class="btn alt" id="runBtn" disabled>▶ Just run it</button><button class="btn alt" id="hintBtn">💡 Hint</button><button class="btn alt" id="solBtn">Show solution</button><button class="btn alt" id="resetBtn">Reset</button><span class="status" id="pystatus">Loading Python…</span></div></section>
+ <section class="panel"><h2>Output</h2><div class="out" id="out">Run your code to see the output here.</div></section>
+ <section class="panel"><h2>Test results</h2><div class="score" id="score"></div><ul class="checks" id="checks"><li class="wait"><span class="ic">·</span><div>Press “Check my code”.</div></li></ul><div id="win"></div></section>
+</div>
+<div class="col">
+ <section class="panel"><h2>Your data (first rows) <span class="links" id="dcount"></span></h2><div class="scroll"><table class="dt" id="dtab"></table></div><p class="note" style="margin:6px 0 0">Pink rows are faulty. Can you see why?</p></section>
+ <section class="panel"><h2>Figures from your cleaned data <span class="links" id="figst"></span></h2><div id="figs"><div class="lock">🔒 Pass <strong>Step 2 · Clean</strong> and your own <code>clean()</code> function will draw four figures here.</div></div></section>
+ <section class="panel"><h2>Explain it (C2) and justify it (C4)</h2>
+  <p class="note" style="margin-top:0">Write in your own words. Your answers are saved in this browser and sent to your teacher's Google Sheet when you are logged in.</p>
+  <label for="q1"><strong>1.</strong> What does the z-score step remove, and why is it a good idea for sensor data?</label><textarea class="ans" id="q1"></textarea><div class="row" style="margin:4px 0 10px"><button class="btn alt sm" data-save="q1">Save</button><span class="status" id="st-q1"></span></div>
+  <label for="q2"><strong>2.</strong> Compare the threshold numbers your data suggested (Step 4) with 500, 300 and 100 in your sketch. Would you change them? Use numbers.</label><textarea class="ans" id="q2"></textarea><div class="row" style="margin:4px 0 10px"><button class="btn alt sm" data-save="q2">Save</button><span class="status" id="st-q2"></span></div>
+  <label for="q3"><strong>3.</strong> The kit's script filters <code>0 ≤ ADC ≤ 4095</code> but its own comment says realistic readings are 20 to 1000. Which is better for your product, and why?</label><textarea class="ans" id="q3"></textarea><div class="row" style="margin:4px 0 0"><button class="btn alt sm" data-save="q3">Save</button><span class="status" id="st-q3"></span></div></section>
+</div></div></div>
+<script>window.LESSON={name:"Lab 2 Light sensor Python data lab"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script><script src="assets/dsdata.js"></script><script src="assets/ds-steps.js"></script><script src="assets/pyrunner.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const STEPS=DS_STEPS;let cur=0,ready=false,hints=0,solSeen=false,dsKey="kit",cleaned=null,cleanForSteps={};
+const HDR='("Timestamp","Raw_ADC","Light_Percent","Condition")';
+let prog={};try{prog=JSON.parse(localStorage.getItem("ds_lab2")||"{}")}catch(e){}const saveP=()=>{try{localStorage.setItem("ds_lab2",JSON.stringify(prog))}catch(e){}};
+function data(){if(dsKey==="kit")return DS_KIT;if(dsKey==="messy")return DS_MESSY;try{const r=JSON.parse(localStorage.getItem("ds_ldr_log")||"[]");return r.length?r:[]}catch(e){return[]}}
+const num=x=>{const v=parseFloat(x);return x===""||x==null||isNaN(v)?null:v};
+function pre(){return `import json as _j; RAW=[dict(zip(${HDR},_r)) for _r in _j.loads(r'${JSON.stringify(data()).replace(/'/g,"")}')]\n`}
+async function preWithClean(){const key=dsKey+data().length;if(!cleanForSteps[key]){const sol=STEPS.find(s=>s.id==="clean").solution;const r=await PyRun.run(pre()+sol+"\nprint('@@DATA@@'+_j.dumps(clean(RAW)))");cleanForSteps[key]=(r.out.split("@@DATA@@")[1]||"[]").trim()}
+ return pre().replace(/\n$/,"")+`; clean_rows=_j.loads(r'${cleanForSteps[key].replace(/'/g,"")}')\n`}
+function drawSteps(){$("steps").innerHTML=STEPS.map((s,i)=>`<button role="tab" class="${i===cur?"on":""}" data-i="${i}"><span class="d">${prog[s.id]&&prog[s.id].done?"✔":"○"}</span>${esc(s.title)}</button>`).join("");$("steps").querySelectorAll("button").forEach(b=>b.onclick=()=>show(+b.dataset.i))}
+function gut(){const c=$("code"),n=c.value.split("\n").length;let s="";for(let i=1;i<=n;i++)s+=i+"\n";$("gutter").textContent=s;$("gutter").scrollTop=c.scrollTop}
+function show(i){cur=i;const s=STEPS[i];hints=0;solSeen=false;$("sTitle").textContent=s.title+"   ("+s.c+")";$("sGoal").innerHTML="<p style='margin:0'>"+s.goal+"</p>";$("hintBox").innerHTML="";$("code").value=(prog[s.id]&&prog[s.id].code)||s.starter;gut();$("out").textContent="Run your code to see the output here.";
+ $("checks").innerHTML='<li class="wait"><span class="ic">·</span><div>Press “Check my code”.</div></li>';$("score").innerHTML="";$("win").innerHTML="";drawSteps()}
+function tableRows(){const d=data();$("dcount").textContent=d.length+" rows";if(!d.length){$("dtab").innerHTML="<tr><td>No Lab 1 readings yet. Go to Lab 1, press Run, then come back.</td></tr>";return}
+ $("dtab").innerHTML="<tr><th>Timestamp</th><th>Raw_ADC</th><th>Light_Percent</th><th>Condition</th></tr>"+d.slice(0,60).map(r=>{const raw=num(r[1]),p=num(r[2]);const bad=raw==null||p==null||!String(r[3]||"").trim()||raw<5||raw>1000;return `<tr class="${bad?"bad":""}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`}).join("")}
+function fixLines(t){return String(t||"").replace(/Line (\d+):/g,(m,n)=>"Line "+Math.max(1,n-1)+":")}
+function showOut(r){let h=esc((r.out||"").replace(/@@DATA@@.*\n?/g,""));if(r.err)h+=(h?"\n":"")+'<span class="err">❌ '+esc(fixLines(r.err))+"</span>";$("out").innerHTML=h||"(no output)"}
+async function run(check){if(!ready)return;const s=STEPS[cur];if(!data().length){$("out").textContent="This dataset is empty. Choose another one or record readings in Lab 1 first.";return}
+ const src=$("code").value;prog[s.id]=prog[s.id]||{};prog[s.id].code=src;saveP();$("checkBtn").disabled=$("runBtn").disabled=true;
+ let r;try{const base=(s.id==="clean"||s.id==="parse")?pre():await preWithClean();r=await PyRun.run(base+src,check?s.tests:undefined)}catch(e){r={out:"",err:String(e),results:[]}}
+ $("checkBtn").disabled=$("runBtn").disabled=false;showOut(r);if(!check)return;
+ if(r.err&&!r.results.length){$("checks").innerHTML='<li class="no"><span class="ic">✘</span><div><strong>Your code has an error</strong><small>'+esc(fixLines(r.err))+"</small></div></li>";$("score").innerHTML="";return}
+ const pass=r.results.filter(x=>x[1]).length,tot=r.results.length,all=pass===tot&&tot>0;
+ $("score").innerHTML=`<div class="ring" style="--p:${tot?Math.round(pass/tot*100):0}"><i>${tot?Math.round(pass/tot*100):0}%</i></div><div><strong>${pass} of ${tot} tests passed</strong></div>`;
+ $("checks").innerHTML=r.results.map(x=>`<li class="${x[1]?"ok":"no"}"><span class="ic">${x[1]?"✔":"✘"}</span><div><strong>${esc(x[0])}</strong>${x[2]?"<small>"+esc(x[2])+"</small>":""}</div></li>`).join("");
+ if(s.id==="clean"){const m=(r.out||"").match(/@@DATA@@(.*)/);if(m){try{cleaned=JSON.parse(m[1]);drawFigs()}catch(e){}}}
+ if(all){const first=!prog[s.id].done;prog[s.id].done=true;saveP();drawSteps();$("win").innerHTML='<div class="win">🎉 <strong>Step complete!</strong>'+(solSeen?" (You looked at the solution, so try it again later without it.)":"")+"</div>";try{win()}catch(e){}
+  if(first&&!solSeen){try{const u=currentUser();if(u&&typeof postToSheet==="function")postToSheet("quiz",{Name:u.name,Class:u.klass,Criterion:"C",Topic:"Light sensor",Lesson:"Lab 2 Python data lab",Quiz:"Lab · Light sensor · Python · "+s.title,Score:pass,Total:tot,Percent:100,TimeTakenSec:0})}catch(e){}}}}
+function win(){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ac=new C();[523,659,784,1046].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,ac.currentTime+i*.12);g.gain.exponentialRampToValueAtTime(.2,ac.currentTime+i*.12+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+i*.12+.25);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+i*.12);o.stop(ac.currentTime+i*.12+.3)})}
+/* charts */
+const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
+function cv(id,cap){return `<figure class="fig"><canvas id="${id}" width="520" height="300" style="width:100%;height:auto;background:var(--panel);border-radius:8px;border:1px solid var(--line)" role="img" aria-label="${cap}"></canvas><figcaption>${cap}</figcaption></figure>`}
+function axes(g,W,H,xl,yl,ymin,ymax,yt){g.font="13px system-ui";g.fillStyle=css("--muted");g.strokeStyle=css("--line");g.lineWidth=1;for(let i=0;i<=4;i++){const y=20+(H-60)*i/4;g.beginPath();g.moveTo(44,y);g.lineTo(W-12,y);g.stroke();const v=ymax-(ymax-ymin)*i/4;g.fillText(yt?yt(v):Math.round(v),4,y+4)}g.fillText(xl,W/2-40,H-6);g.save();g.translate(12,H/2+20);g.rotate(-Math.PI/2);g.fillText(yl,0,0);g.restore()}
+function drawFigs(){if(!cleaned||!cleaned.length)return;const raw=data().map(r=>({ts:r[0],raw:num(r[1]),pct:num(r[2])}));
+ $("figst").textContent=cleaned.length+" clean rows";
+ $("figs").innerHTML='<div class="charts">'+cv("f0","Figure 1: raw ADC readings. Red crosses were removed by your clean().")+cv("f1","Figure 2: Light % over time with your 5-sample moving average.")+cv("f2","Figure 3: how often each condition was detected.")+cv("f3","Figure 4: distribution of Light % with mean and median.")+"</div>";
+ const T=n=>document.getElementById(n);
+ // fig 0
+ {const c=T("f0"),g=c.getContext("2d"),W=c.width,H=c.height;const vals=raw.map(r=>r.raw).filter(v=>v!=null);const ymax=Math.max(1000,Math.min(4200,Math.max(...vals,1000)));axes(g,W,H,"sample number","Raw ADC",0,ymax,v=>Math.round(v));
+  let k=0;const keep=new Set();raw.forEach((r,i)=>{if(k<cleaned.length&&cleaned[k].Timestamp===r.ts&&Math.abs(cleaned[k].Raw_ADC-(r.raw==null?-9:r.raw))<1e-6){keep.add(i);k++}});
+  raw.forEach((r,i)=>{const x=44+(W-60)*i/Math.max(1,raw.length-1);if(r.raw==null){g.fillStyle="#dc2626";g.fillText("?",x,H-34);return}const y=20+(H-60)*(1-r.raw/ymax);if(keep.has(i)){g.fillStyle="#0891b2";g.beginPath();g.arc(x,y,2.6,0,7);g.fill()}else{g.strokeStyle="#dc2626";g.lineWidth=2;g.beginPath();g.moveTo(x-4,y-4);g.lineTo(x+4,y+4);g.moveTo(x+4,y-4);g.lineTo(x-4,y+4);g.stroke()}});
+  window.__removed=raw.length-keep.size}
+ // fig 1
+ {const c=T("f1"),g=c.getContext("2d"),W=c.width,H=c.height;axes(g,W,H,"sample number","Light %",0,100);const n=cleaned.length;const X=i=>44+(W-60)*i/Math.max(1,n-1),Y=v=>20+(H-60)*(1-v/100);
+  [[70,"#10b981"],[30,"#ef4444"]].forEach(([v,col])=>{g.strokeStyle=col;g.setLineDash([3,4]);g.beginPath();g.moveTo(44,Y(v));g.lineTo(W-12,Y(v));g.stroke();g.setLineDash([])});
+  g.lineWidth=1.8;g.strokeStyle="#06b6d4";g.beginPath();cleaned.forEach((r,i)=>i?g.lineTo(X(i),Y(r.Light_Percent)):g.moveTo(X(i),Y(r.Light_Percent)));g.stroke();
+  g.strokeStyle="#f59e0b";g.setLineDash([6,4]);g.lineWidth=2.2;g.beginPath();cleaned.forEach((r,i)=>i?g.lineTo(X(i),Y(r.Light_Pct_MA5)):g.moveTo(X(i),Y(r.Light_Pct_MA5)));g.stroke();g.setLineDash([])}
+ // fig 2
+ {const c=T("f2"),g=c.getContext("2d"),W=c.width,H=c.height;const order=["DARK","DIM","BRIGHT","VERY BRIGHT"],cols=["#334155","#06b6d4","#f59e0b","#10b981"];const cnt=order.map(o=>cleaned.filter(r=>r.Condition===o).length);const ym=Math.max(...cnt,1);axes(g,W,H,"condition","count",0,ym,v=>Math.round(v));
+  cnt.forEach((n,i)=>{const bw=(W-70)/4,x=52+i*bw+8,h=(H-60)*n/ym;g.fillStyle=cols[i];g.fillRect(x,H-40-h,bw-16,h);g.fillStyle=css("--ink");g.fillText(n,x+(bw-16)/2-6,H-44-h);g.fillStyle=css("--muted");g.fillText(order[i],x,H-24)})}
+ // fig 3
+ {const c=T("f3"),g=c.getContext("2d"),W=c.width,H=c.height;const v=cleaned.map(r=>r.Light_Percent),bins=Array(10).fill(0);v.forEach(x=>bins[Math.min(9,Math.floor(x/10))]++);const ym=Math.max(...bins,1);axes(g,W,H,"Light %","frequency",0,ym,x=>Math.round(x));
+  bins.forEach((n,i)=>{const bw=(W-60)/10,h=(H-60)*n/ym;g.fillStyle="#0284c7";g.fillRect(48+i*bw+2,H-40-h,bw-4,h)});
+  const mean=v.reduce((a,b)=>a+b,0)/v.length,s=[...v].sort((a,b)=>a-b),med=s.length%2?s[(s.length-1)/2]:(s[s.length/2-1]+s[s.length/2])/2;const X=x=>48+(W-60)*x/100;
+  g.lineWidth=2;g.strokeStyle="#ef4444";g.beginPath();g.moveTo(X(mean),20);g.lineTo(X(mean),H-40);g.stroke();g.strokeStyle="#10b981";g.setLineDash([6,4]);g.beginPath();g.moveTo(X(med),20);g.lineTo(X(med),H-40);g.stroke();g.setLineDash([]);
+  g.fillStyle="#ef4444";g.fillText("mean "+mean.toFixed(1)+"%",W-130,34);g.fillStyle="#10b981";g.fillText("median "+med.toFixed(1)+"%",W-130,50)}
+}
+/* wiring */
+$("checkBtn").onclick=()=>run(true);$("runBtn").onclick=()=>run(false);
+$("hintBtn").onclick=()=>{const s=STEPS[cur];if(hints<s.hints.length)hints++;$("hintBox").innerHTML=s.hints.slice(0,hints).map((h,i)=>`<div class="hint"><strong>Hint ${i+1}:</strong> ${h}</div>`).join("")};
+$("solBtn").onclick=()=>{if(!solSeen&&!confirm("Show the solution? Try the hints first. You can still complete the step, but it will not be sent to the Google Sheet."))return;solSeen=true;$("hintBox").innerHTML='<div class="hint"><strong>Solution</strong><pre style="background:var(--code-bg);color:var(--code-ink);padding:10px;border-radius:8px;overflow:auto;font:12.5px/1.5 Consolas,Menlo,monospace">'+esc(STEPS[cur].solution)+"</pre></div>"};
+$("resetBtn").onclick=()=>{if(confirm("Put the starter code back?")){const s=STEPS[cur];$("code").value=s.starter;if(prog[s.id])delete prog[s.id].code;saveP();gut()}};
+$("code").addEventListener("input",gut);$("code").addEventListener("scroll",()=>{$("gutter").scrollTop=$("code").scrollTop});
+$("code").addEventListener("keydown",e=>{if(e.key==="Tab"){e.preventDefault();const c=$("code"),a=c.selectionStart;c.value=c.value.slice(0,a)+"    "+c.value.slice(c.selectionEnd);c.selectionStart=c.selectionEnd=a+4;gut()}if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();run(true)}});
+$("dsel").onchange=()=>{dsKey=$("dsel").value;cleaned=null;$("figs").innerHTML='<div class="lock">🔒 Pass <strong>Step 2 · Clean</strong> again with this dataset to redraw the figures.</div>';tableRows();$("dnote").textContent=dsKey==="messy"?"Synthetic data made for practice. It is not from a real sensor.":dsKey==="kit"?"Real readings from the DataSciensPro kit.":"The readings you recorded in Lab 1."};
+const Q=["q1","q2","q3"];Q.forEach(q=>{try{$(q).value=localStorage.getItem("ds_lab2_"+q)||""}catch(e){}});
+document.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>{const q=b.dataset.save,t=$(q).value.trim(),st=$("st-"+q);if(!t){st.textContent="Write something first.";return}try{localStorage.setItem("ds_lab2_"+q,t)}catch(e){}const u=currentUser();if(u&&typeof postToSheet==="function"){postToSheet("strand",{Name:u.name,Class:u.klass,Lesson:"Light sensor Lab 2",Strand:"C",Prompt:document.querySelector('label[for="'+q+'"]').textContent,Response:t});st.textContent="✅ Saved and sent "+new Date().toLocaleTimeString()}else st.textContent="Saved here. Log in to also send it to your teacher."});
+tableRows();drawSteps();show(0);$("dnote").textContent="Real readings from the DataSciensPro kit.";
+PyRun.init().then(()=>{ready=true;$("pystatus").textContent="Python ready";$("checkBtn").disabled=$("runBtn").disabled=false}).catch(e=>{$("pystatus").textContent=String(e.message||e)});
+window.__lab2={run,show,get cleaned(){return cleaned},prog,STEPS};
+})();
+</script></body></html>

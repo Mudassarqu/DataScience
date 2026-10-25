@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan and rubric · Vibration Sensor | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/dspro.css">
+<style>
+.sec{scroll-margin-top:70px}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.jump a{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.88rem}
+table.ed{border-collapse:collapse;width:100%;font-size:.9rem}table.ed th{background:var(--navy);color:#fff;padding:7px 8px;text-align:left;font-weight:700;position:sticky;top:0}
+table.ed td{border-bottom:1px solid var(--line);padding:3px}table.ed input,table.ed textarea,table.ed select{width:100%;box-sizing:border-box;border:1px solid transparent;background:transparent;color:var(--ink);font:inherit;padding:5px 6px;border-radius:6px}
+table.ed input:focus,table.ed textarea:focus,table.ed select:focus{border-color:var(--blue);background:var(--panel)}table.ed textarea{resize:vertical;min-height:34px}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:10px}
+.gantt{display:grid;gap:4px;margin-top:10px;font-size:.82rem}.gantt .r{display:grid;grid-template-columns:150px repeat(6,1fr);gap:3px;align-items:center}.gantt .r span.l{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.gantt .c{height:18px;background:var(--chip);border-radius:3px}.gantt .c.on{background:var(--accent)}.gantt .hd .c{background:none;text-align:center;color:var(--muted);height:auto}
+.rub td,.rub th{vertical-align:top;font-size:.86rem}
+.lvl button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:8px;padding:4px 10px;font:inherit;font-weight:700;cursor:pointer}.lvl button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.log{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;background:var(--panel);margin-top:10px}
+.log h3{margin:0 0 4px;font-size:1rem}.log .meta{color:var(--muted);font-size:.84rem;margin-bottom:6px}.log pre{white-space:pre-wrap;font:inherit;margin:4px 0}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:760px){.form2{grid-template-columns:1fr}}
+.form2 label{font-weight:700;font-size:.86rem;display:block}.form2 input,.form2 textarea{width:100%;box-sizing:border-box;border:2px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 9px;font:inherit;margin-top:3px}
+.form2 .full{grid-column:1/-1}
+.explain{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:900px){.explain{grid-template-columns:1fr}}
+.cdline{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:12px;font:12.5px/1.6 Consolas,Menlo,monospace;white-space:pre;overflow:auto}
+.exp li{margin:5px 0}
+.ex{display:inline-block;background:#fff3cd;border:1px solid #f0d978;color:#7a5b00;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:12px;margin-left:6px;vertical-align:middle}
+@media print{.topbar,.lessontabs,.loginbar,.jump,.noprint,.top{display:none!important}body{background:#fff}.panel{box-shadow:none;break-inside:avoid}}
+</style></head><body>
+<div id="dsnav" data-tab="plan" data-lesson="vibration"></div>
+<div class="top"><div class="in"><div><span class="tag">MYP Design · Criterion C · Creating the solution</span><h1>📳 Vibration Sensor: plan, build, log, justify</h1></div><p>Follow your Criterion B plan with the DataSciensPro kit. Everything you write here is saved in your browser, and you can print or download it for your portfolio.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to send your C1–C4 work to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
+<div class="wrapx" style="max-width:1100px"><div class="col" style="gap:16px">
+<div class="jump noprint"><a href="#how">How C links to B</a><a href="#c1">C1 Plan</a><a href="#c2">C2 Technical skills</a><a href="#c3">C3 Making log</a><a href="#c4">C4 Changes</a><a href="#rubric">Rubric</a><a href="#tests">Test results</a><button class="btn alt sm" onclick="window.print()">🖨 Print / save as PDF</button><a class="btn alt sm" href="downloads/G9_DS_CriterionC_Summative_Booklet_Vibration_Sensor.docx" download>⬇ Summative booklet (Word)</a><button class="btn alt sm" id="dlAll">⬇ Download everything (.md)</button></div>
+
+<section class="panel sec" id="how"><h2>How Criterion C connects to Criterion B</h2>
+<div class="tw"><table class="ed"><tr><th>Criterion B gave you…</th><th>…so in Criterion C you…</th><th>Where</th></tr>
+<tr><td>B1 specification and success criteria</td><td>test your sensor and code against each criterion (C3, C4)</td><td><a href="#tests">Test results</a></td></tr>
+<tr><td>B3 chosen design (your chosen design from Criterion B)</td><td>compare your final product with it (C4)</td><td><a href="#c4">C4</a></td></tr>
+<tr><td>B4 circuit, flowchart, pseudocode</td><td>turn them into the Arduino sketch and Python program, and a plan (C1, C2)</td><td>your kit sketch and Python scripts</td></tr></table></div>
+<p class="note">Every example row is a model to edit. Replace it with your own chosen design from Criterion B.</p></section>
+
+<section class="panel sec" id="c1"><h2>C1 · Logical plan <span class="ex">EXEMPLAR · edit every cell</span></h2>
+<p style="margin-top:0">List the major tasks and sub-tasks, the resources, and the minutes for learning, building, debugging and testing. A classmate should be able to follow it.</p>
+<div class="tw"><table class="ed" id="planT"><thead><tr><th style="width:17%">Task</th><th style="width:26%">Sub-tasks</th><th style="width:19%">Resources</th><th style="width:12%">Type</th><th style="width:8%">Minutes</th><th style="width:7%">Start wk</th><th style="width:7%">End wk</th><th style="width:4%"></th></tr></thead><tbody></tbody></table></div>
+<div class="row" style="margin-top:8px"><button class="btn alt sm" id="addPlan">+ Add task</button><span class="status" id="planTot"></span><button class="btn sm noprint" data-send="C1">Send C1 to my teacher</button><span class="status" id="st-C1"></span></div>
+<div class="gantt" id="gantt" aria-label="Gantt chart"></div></section>
+
+<section class="panel sec" id="c2"><h2>C2 · Technical skills and explaining the code</h2>
+<div class="explain"><div><div style="grid-column:1/-1"><h3 style="margin:0 0 6px">Explain your own code</h3>
+<p>Paste the key lines of your <strong>Arduino sketch</strong> and your <strong>Python scripts</strong> into your portfolio. For each snippet, write what it does, why you wrote it this way, and how you tested it. The sensor measures shaking or vibration of the surface the sensor is on.</p>
+<ol class="exp"><li><strong>Sketch:</strong> how does it read the Vibration Sensor? Which pin? Which thresholds or conditions turn readings into words?</li><li><strong>Serial output:</strong> what does each part of the printed line mean? What baud rate do you use?</li><li><strong>Python collect:</strong> how does it read the serial line and save a CSV row?</li><li><strong>Python clean:</strong> what bad data can this sensor give, and what did you remove or fix?</li><li><strong>Python charts:</strong> what do your charts show, with numbers?</li></ol></div></div>
+<h3>Technical skills checklist</h3><div class="col" style="gap:4px" id="skills"></div>
+<h3>Explain it in your own words</h3><textarea class="ans" id="expl" style="width:100%;min-height:110px;box-sizing:border-box;border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit;background:var(--panel);color:var(--ink)" placeholder="Explain how the circuit, the sketch and your Python cleaning work together. Name the sensor, the pin, one threshold, and one cleaning step."></textarea>
+<div class="callout" style="margin:10px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--chip)">ℹ️ The virtual ESP32 lab and Python data lab for the Vibration Sensor are added when its kit sketch and scripts are available. Use the Practice, Learn and Quiz tabs now, and your own kit for the evidence.</div><div class="row" style="margin-top:6px"><button class="btn sm noprint" data-send="C2">Send C2 to my teacher</button><span class="status" id="st-C2"></span></div></section>
+
+<section class="panel sec" id="c3"><h2>C3 · Following the plan: making log</h2>
+<div class="form2"><label>Date<input type="date" id="lgDate"></label><label>Task from your plan<input id="lgTask" placeholder="e.g. 3 · Collect data in different conditions"></label>
+<label class="full">Goal for this session<input id="lgGoal" placeholder="What did you plan to finish?"></label>
+<label class="full">Notes: what you did since the last entry<textarea id="lgNotes" rows="4" placeholder="Describe what you accomplished. Add screenshots or photos in your portfolio and name them here."></textarea></label>
+<label class="full">Reflection: how well did you meet the goal? What obstacles remain?<textarea id="lgRef" rows="3"></textarea></label></div>
+<div class="row" style="margin-top:8px"><button class="btn run" id="lgAdd">Add log entry</button><button class="btn alt sm" id="lgL1">Insert Lab 1 evidence</button><button class="btn alt sm" id="lgL2">Insert Lab 2 evidence</button><button class="btn sm noprint" data-send="C3">Send C3 to my teacher</button><span class="status" id="st-C3"></span></div>
+<div id="logs"></div></section>
+
+<section class="panel sec" id="c4"><h2>C4 · Justifying changes</h2>
+<p style="margin-top:0">Compare your final product with the Criterion B chosen design and your first plan. Describe each change and justify it with <strong>evidence</strong> (a reading, a chart, a test result).</p>
+<div class="tw"><table class="ed" id="chT"><thead><tr><th style="width:26%">Original plan / design (B3, C1)</th><th style="width:26%">Final product</th><th style="width:38%">Reason for the change, with evidence</th><th style="width:4%"></th></tr></thead><tbody></tbody></table></div>
+<div class="row" style="margin-top:8px"><button class="btn alt sm" id="addCh">+ Add change</button><button class="btn sm noprint" data-send="C4">Send C4 to my teacher</button><span class="status" id="st-C4"></span></div>
+<p class="note">Strong example: <em>Original: lights stay on only while the PIR is HIGH. Final: lights stay on for the longest visit plus 2 s. Reason: Lab 2 showed 14 visits, median 2 s and longest 8 s, so the lights would have switched off 14 times in 120 s; a 10 s timer would switch them off only after the last visit.</em> (made-up numbers to show the style)</p></section>
+
+<section class="panel sec" id="tests"><h2>Test results against your B1 success criteria</h2>
+<div class="tw"><table class="ed" id="tsT"><thead><tr><th style="width:26%">B1 success criterion</th><th style="width:30%">How you tested it</th><th style="width:22%">Result</th><th style="width:12%">Met?</th><th style="width:4%"></th></tr></thead><tbody></tbody></table></div>
+<div class="row" style="margin-top:8px"><button class="btn alt sm" id="addTs">+ Add test</button></div></section>
+
+<section class="panel sec" id="rubric"><h2>Criterion C rubric (MYP Design, levels 1 to 8)</h2>
+<div class="tw"><table class="ed rub"><thead><tr><th style="width:11%">Strand</th><th>1–2</th><th>3–4</th><th>5–6</th><th>7–8</th></tr></thead><tbody>
+<tr><td><strong>C1</strong> Logical plan</td><td>Plan is incomplete and not detailed. Tasks and sub-tasks do not give the time and resources needed.</td><td>Some production details, but peers have difficulty following the plan. Tasks are too simple or illogical.</td><td>A logical plan that considers time and resources, sufficient for peers to follow to create the solution.</td><td>A detailed, logical plan that describes efficient use of time and resources. Every task and sub-task gives time and resources.</td></tr>
+<tr><td><strong>C2</strong> Technical skills</td><td>Minimal technical skills.</td><td>Satisfactory technical skills.</td><td>Competent technical skills, with an explanation of the code and circuit.</td><td>Excellent technical skills, with a detailed explanation of the code, sensors and wiring.</td></tr>
+<tr><td><strong>C3</strong> Following the plan</td><td>The solution functions poorly and is presented incompletely.</td><td>The solution partially functions and is presented adequately, with a process log.</td><td>The solution functions as intended and is presented appropriately, with a detailed process log.</td><td>Follows the plan to create the solution, which functions as intended. Detailed daily log with notes and reflection.</td></tr>
+<tr><td><strong>C4</strong> Changes</td><td>Unable to justify the changes made to the design and plan.</td><td>Outlines the changes to the chosen design and plan.</td><td>Describes the changes to the chosen design and plan.</td><td>Fully justifies every change to the chosen design and plan with valid reasons and evidence.</td></tr>
+</tbody></table></div>
+<p class="note">Descriptors are summarised from the school's Criterion C exemplar document. Check them against the current MYP Design guide and your teacher's rubric.</p>
+<h3>My self-assessment</h3><div id="selfs" class="col" style="gap:8px"></div></section>
+</div></div>
+<script>window.LESSON={name:"Vibration Sensor Criterion C plan and rubric"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id),esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const K="ds_c_vibration";let D={};try{D=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}};
+D.plan=D.plan||[["1 · Learn the circuit","Identify the Vibration Sensor, the ESP32 and the pins; wire it from the diagram","Kit, breadboard, USB cable","Learning",40,1,1],["2 · First readings","Upload the sketch; read the Serial Monitor in different conditions","Arduino IDE, laptop","Building",50,1,2],["3 · Collect data","Log readings to CSV (script 1)","Python, pyserial, COM port","Building",60,2,2],["4 · Clean the data","Parse lines, remove bad rows, add derived columns (script 2)","Python","Building",70,2,3],["5 · Debug","Fix faults and wrong thresholds","Serial Monitor, print()","Debugging",40,3,3],["6 · Test against B1","Run the tests for each success criterion and record results","Test table below","Testing",50,3,4],["7 · Charts and evaluation","Make charts and explain what they show","Python, charts, portfolio","Building",60,4,4]];
+D.ch=D.ch||[["(Original idea from B3 or your first plan)","(What you changed in the final solution)","(Reason, with a number from your data. Replace this example.)"]];
+D.ts=D.ts||[["(B1 success criterion 1)","How you tested it","","Not tested"],["(B1 success criterion 2)","How you tested it","","Not tested"]];
+D.logs=D.logs||[];D.skills=D.skills||{};D.lvl=D.lvl||{};
+const SK=["I wired the Vibration Sensor to the ESP32 from the circuit diagram","I uploaded and edited the Arduino sketch","I used the Serial Monitor to read the sensor values","I wrote or finished Python to collect and clean the data","I cleaned data and recorded what was removed","I made charts and described them with numbers","I tested against my B1 success criteria","I debugged at least one fault and recorded how"];
+function planTable(){const tb=$("planT").querySelector("tbody");tb.innerHTML=D.plan.map((r,i)=>`<tr><td><textarea data-t="plan" data-i="${i}" data-j="0">${esc(r[0])}</textarea></td><td><textarea data-t="plan" data-i="${i}" data-j="1">${esc(r[1])}</textarea></td><td><textarea data-t="plan" data-i="${i}" data-j="2">${esc(r[2])}</textarea></td><td><select data-t="plan" data-i="${i}" data-j="3">${["Learning","Building","Debugging","Testing"].map(o=>`<option ${r[3]===o?"selected":""}>${o}</option>`).join("")}</select></td><td><input type="number" min="0" data-t="plan" data-i="${i}" data-j="4" value="${esc(r[4])}"></td><td><input type="number" min="1" max="6" data-t="plan" data-i="${i}" data-j="5" value="${esc(r[5])}"></td><td><input type="number" min="1" max="6" data-t="plan" data-i="${i}" data-j="6" value="${esc(r[6])}"></td><td><button class="btn alt sm" data-del="plan" data-i="${i}" aria-label="Delete row">✕</button></td></tr>`).join("");
+ const by={};D.plan.forEach(r=>by[r[3]]=(by[r[3]]||0)+(+r[4]||0));const tot=Object.values(by).reduce((a,b)=>a+b,0);$("planTot").textContent="Total "+tot+" min · "+Object.entries(by).map(([k,v])=>k+" "+v).join(" · ");
+ $("gantt").innerHTML='<div class="r hd"><span class="l"></span>'+[1,2,3,4,5,6].map(w=>`<span class="c">W${w}</span>`).join("")+"</div>"+D.plan.map(r=>`<div class="r"><span class="l" title="${esc(r[0])}">${esc(r[0])}</span>`+[1,2,3,4,5,6].map(w=>`<span class="c ${w>=+r[5]&&w<=+r[6]?"on":""}"></span>`).join("")+"</div>").join("")}
+function simple(id,key,cols,mk){const tb=$(id).querySelector("tbody");tb.innerHTML=D[key].map((r,i)=>"<tr>"+r.map((v,j)=>`<td>${cols[j]==="sel"?`<select data-t="${key}" data-i="${i}" data-j="${j}">${["Yes","Partly","No","Not tested"].map(o=>`<option ${v===o?"selected":""}>${o}</option>`).join("")}</select>`:`<textarea data-t="${key}" data-i="${i}" data-j="${j}">${esc(v)}</textarea>`}</td>`).join("")+`<td><button class="btn alt sm" data-del="${key}" data-i="${i}" aria-label="Delete row">✕</button></td></tr>`).join("")}
+function all(){planTable();simple("chT","ch",["t","t","t"]);simple("tsT","ts",["t","t","t","sel"]);logs();skills();selfs()}
+document.addEventListener("input",e=>{const t=e.target.dataset&&e.target.dataset.t;if(!t)return;D[t][+e.target.dataset.i][+e.target.dataset.j]=e.target.type==="number"?+e.target.value:e.target.value;save();if(t==="plan")planTable()===undefined&&0});
+document.addEventListener("change",e=>{const t=e.target.dataset&&e.target.dataset.t;if(!t)return;D[t][+e.target.dataset.i][+e.target.dataset.j]=e.target.value;save();if(t==="plan")planTable()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;const k=b.dataset.del;if(confirm("Delete this row?")){D[k].splice(+b.dataset.i,1);save();all()}});
+$("addPlan").onclick=()=>{D.plan.push(["","","","Building",30,1,1]);save();planTable()};$("addCh").onclick=()=>{D.ch.push(["","",""]);save();all()};$("addTs").onclick=()=>{D.ts.push(["","","","Not tested"]);save();all()};
+function skills(){$("skills").innerHTML=SK.map((s,i)=>`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-sk="${i}" ${D.skills[i]?"checked":""}> ${esc(s)}</label>`).join("");$("skills").querySelectorAll("input").forEach(c=>c.onchange=()=>{D.skills[c.dataset.sk]=c.checked;save()})}
+$("expl").value=D.expl||"";$("expl").oninput=()=>{D.expl=$("expl").value;save()};
+function logs(){$("logs").innerHTML=D.logs.length?D.logs.map((l,i)=>`<div class="log"><h3>${esc(l.task||"Entry")}</h3><div class="meta">${esc(l.date)} · goal: ${esc(l.goal)} <button class="btn alt sm" data-dl="${i}" style="float:right">✕</button></div><pre><strong>Notes:</strong> ${esc(l.notes)}</pre><pre><strong>Reflection:</strong> ${esc(l.ref)}</pre></div>`).reverse().join(""):'<p class="note">No entries yet. Add your first one above.</p>';
+ $("logs").querySelectorAll("[data-dl]").forEach(b=>b.onclick=()=>{if(confirm("Delete this log entry?")){D.logs.splice(+b.dataset.dl,1);save();logs()}})}
+$("lgDate").value=new Date().toISOString().slice(0,10);
+$("lgAdd").onclick=()=>{if(!$("lgNotes").value.trim()){alert("Write your notes first.");return}D.logs.push({date:$("lgDate").value,task:$("lgTask").value,goal:$("lgGoal").value,notes:$("lgNotes").value,ref:$("lgRef").value});save();["lgNotes","lgRef","lgGoal"].forEach(i=>$(i).value="");logs()};
+$("lgL1").onclick=()=>{alert("Add your own serial output here: copy the last lines from your Serial Monitor.")};
+$("lgL2").onclick=()=>{$("lgNotes").value+=(($("lgNotes").value?"\n":"")+"Python evidence: (paste your clean() output and charts description)")};
+function selfs(){const S=[["C1","Logical plan"],["C2","Technical skills"],["C3","Following the plan"],["C4","Changes"]];$("selfs").innerHTML=S.map(([k,n])=>`<div class="lvl"><strong style="display:inline-block;width:200px">${k} ${n}</strong>`+["1–2","3–4","5–6","7–8"].map(l=>`<button data-lv="${k}" data-v="${l}" class="${D.lvl[k]===l?"on":""}">${l}</button>`).join(" ")+"</div>").join("");$("selfs").querySelectorAll("button").forEach(b=>b.onclick=()=>{D.lvl[b.dataset.lv]=b.dataset.v;save();selfs()})}
+function summary(k){const rows=a=>a.map(r=>"- "+r.join(" | ")).join("\n");if(k==="C1")return "C1 plan\n"+rows(D.plan);if(k==="C2")return "C2 skills: "+SK.filter((s,i)=>D.skills[i]).join("; ")+"\nExplanation: "+(D.expl||"");if(k==="C3")return "C3 log entries: "+D.logs.length+"\n"+D.logs.map(l=>l.date+" "+l.task+": "+l.notes+" || "+l.ref).join("\n");return "C4 changes\n"+rows(D.ch)}
+document.querySelectorAll("[data-send]").forEach(b=>b.onclick=()=>{const k=b.dataset.send,st=$("st-"+k),u=currentUser();if(!u){st.textContent="Log in above first.";return}postToSheet("strand",{Name:u.name,Class:u.klass,Lesson:"Vibration Sensor Criterion C",Strand:k,Prompt:k+" work summary",Response:summary(k).slice(0,45000)});st.textContent="✅ Sent "+new Date().toLocaleTimeString()});
+$("dlAll").onclick=()=>{const md=`# Vibration Sensor · Criterion C\n\n## C1 Plan\n${D.plan.map(r=>`- ${r[0]} | ${r[1]} | ${r[2]} | ${r[3]} | ${r[4]} min | weeks ${r[5]}-${r[6]}`).join("\n")}\n\n## C2 Technical skills\n${SK.filter((s,i)=>D.skills[i]).map(s=>"- "+s).join("\n")}\n\n${D.expl||""}\n\n## C3 Making log\n${D.logs.map(l=>`### ${l.date} · ${l.task}\nGoal: ${l.goal}\n\nNotes: ${l.notes}\n\nReflection: ${l.ref}\n`).join("\n")}\n## C4 Changes\n${D.ch.map(r=>`- Original: ${r[0]} | Final: ${r[1]} | Reason: ${r[2]}`).join("\n")}\n\n## Tests\n${D.ts.map(r=>`- ${r[0]} | ${r[1]} | ${r[2]} | ${r[3]}`).join("\n")}\n\n## Self-assessment\n${Object.entries(D.lvl).map(([k,v])=>`- ${k}: ${v}`).join("\n")}\n`;const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([md],{type:"text/markdown"}));a.download="vibration_Criterion_C.md";a.click()};
+all();
+})();
+</script></body></html>

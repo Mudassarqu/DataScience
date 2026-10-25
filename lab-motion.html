@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 1 · Virtual ESP32 + PIR Motion | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/dspro.css"></head><body>
+<div id="dsnav" data-tab="lab1" data-lesson="motion"></div>
+<div class="top"><div class="in"><div><span class="tag">C2 Technical skills · Virtual hardware</span><h1>Lab 1 · Virtual ESP32 + PIR Motion Detector</h1></div><p>This is the real sketch from your DataSciensPro kit. Send a person past the sensor, change the <strong>yellow boxes</strong> and watch the telemetry change.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
+<div class="wrapx"><div class="g2">
+<div class="col">
+ <section class="panel"><h2>Virtual hardware <span class="links" id="clock">t = 0 s</span></h2>
+  <svg viewBox="0 0 520 230" width="100%" role="img" aria-label="ESP32 with a PIR sensor on pin 27, a relay on pin 25 and a buzzer on pin 26" style="display:block">
+   <rect width="520" height="230" rx="12" fill="var(--chip)"/>
+   <rect x="20" y="170" width="260" height="10" rx="3" fill="#4d6a85"/><text x="150" y="200" text-anchor="middle" font-size="12" fill="var(--muted)">Corridor floor</text>
+   <g id="person"><circle cx="0" cy="0" r="11" fill="#e2a31b"/><rect x="-9" y="11" width="18" height="34" rx="6" fill="#e2a31b"/><rect x="-9" y="45" width="7" height="22" fill="#e2a31b"/><rect x="2" y="45" width="7" height="22" fill="#e2a31b"/></g>
+   <g transform="translate(150,40)"><path d="M0 0 L120 -4 M0 0 L120 40" stroke="#d9a400" stroke-dasharray="4 4" opacity=".5"/></g>
+   <g transform="translate(120,30)"><rect width="60" height="34" rx="8" fill="#f0883e"/><circle cx="30" cy="17" r="11" fill="#fff" opacity=".9"/><text x="30" y="21" text-anchor="middle" font-size="10" fill="#7a3a00" font-weight="700">PIR</text></g>
+   <path d="M180 47H250" stroke="#d9a400" stroke-width="3" fill="none"/>
+   <rect x="250" y="30" width="240" height="170" rx="12" fill="#12263a" stroke="#4d6a85" stroke-width="2"/>
+   <rect x="320" y="46" width="70" height="34" rx="4" fill="#2c4a66"/><text x="355" y="68" text-anchor="middle" font-size="13" fill="#bcd2e8" font-weight="700">ESP32</text>
+   <text x="258" y="52" font-size="11" fill="#e0b92e">GPIO 27</text>
+   <circle id="bulb" cx="300" cy="140" r="20" fill="#4d4520"/><text x="300" y="182" text-anchor="middle" font-size="10" fill="#9bb0c4">Relay GPIO 25 · light</text>
+   <rect id="buz" x="400" y="125" width="40" height="30" rx="6" fill="#512a2a"/><text x="420" y="172" text-anchor="middle" font-size="10" fill="#9bb0c4">Buzzer GPIO 26</text>
+  </svg></section>
+ <section class="panel"><div class="big3"><div><small>MOTION</small><b id="vMot">0</b></div><div><small>DWELL (s)</small><b id="vDw">0.0</b><div class="meter" style="margin-top:4px"><i id="mDw" style="width:0"></i></div></div><div><small>STATUS</small><span class="cond" id="vSt" style="background:#64748b">VACANT_STANDBY</span></div></div></section>
+ <section class="panel"><h2>The person in the corridor</h2>
+  <div class="presets"><button class="btn alt sm" id="bWalk">🚶 Walk past (1.5 s)</button><button class="btn alt sm" id="bWork">🧑‍💻 Work nearby (4 s)</button><button class="btn alt sm" id="bStay">🧍 Stay put (9 s)</button><button class="btn alt sm" id="bHold">✋ Hold motion (toggle)</button></div>
+  <div class="row" style="margin-top:10px"><button class="btn run" id="runBtn">▶ Run virtual ESP32</button><button class="btn alt" id="dayBtn">🏫 Play a school day</button><button class="btn alt" id="stopBtn" disabled>■ Stop</button></div>
+  <div class="row" style="margin-top:8px"><label for="spd" class="note">Speed</label><select id="spd"><option value="1">1×</option><option value="5">5×</option><option value="20" selected>20×</option></select>
+   <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fault"> 🔌 Ghost triggers (false alarms)</label><label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="snd" checked> 🔊 Sound</label></div></section>
+ <section class="panel"><h2>Missions <span class="links" id="mCount">0 / 6</span></h2><div class="col" id="missions" style="gap:8px"></div><p class="status" id="doneMsg" style="margin-top:8px"></p></section>
+</div>
+<div class="col">
+ <section class="panel"><h2>motion-sensor.ino (ESP32) <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
+  <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (security buzzer after long presence)</label></section>
+ <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
+  <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-python-motion.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
+ <section class="panel"><h2>Live chart (last 60 readings)</h2><canvas class="ch" id="chart" width="900" height="260" role="img" aria-label="Chart of motion state and dwell time"></canvas></section>
+ <section class="panel calc"><h2>Classify a dwell time yourself</h2><label>Dwell_Time_ms = <input id="cRaw" type="number" value="3500"></label> <span class="note">(try 800, 2000, 2001, 6000, 6001)</span><pre id="cOut"></pre></section>
+</div></div></div>
+<script>window.LESSON={name:"Lab 1 Motion sensor virtual ESP32"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const P={transit:2000,cont:6000,interval:1000,warm:3000,buz:8000};
+const COL={VACANT_STANDBY:"#64748b",TRANSIT_PASSING:"#0891b2",ACTIVE_OCCUPANCY:"#d97706",CONTINUOUS_PRESENCE:"#dc2626"};
+let now=0,present=false,holdTill=0,holdOn=false,motion=0,start=0,dwell=0,lastTel=-1e9,relay=0,buzzer=0,running=false,timer=null,curFn=null,day=null,rows=[],hist=[],wall=Date.now();
+let seen={tr:false,ac:false,co:false,rel:false,day:false,relOff:false};
+try{rows=JSON.parse(localStorage.getItem("ds_pir_log")||"[]")}catch(e){}$("nRows").textContent=rows.length;
+const F=(k)=>`<input class="yel" data-k="${k}" value="${P[k]}" inputmode="numeric" aria-label="${k}">`;
+function drawSketch(){const e=$("ext").checked;
+$("sketch").innerHTML=`<span class="cm">// DataSciensPro Kit - PIR Motion (HC-SR501 / AM312)   ESP32 | GPIO 27 | 9600 baud</span>
+<span class="kw">const int</span> PIR_PIN = 27, RELAY_PIN = 25, BUZZER_PIN = 26;
+<span class="kw">int</span> lastMotionState = LOW;  <span class="kw">unsigned long</span> motionStartTime = 0, dwellDuration = 0;
+<span class="kw">const unsigned long</span> TELEMETRY_INTERVAL = ${F("interval")};  <span class="cm">// ms, 1000 = 1 Hz</span>
+
+<span class="kw">void</span> setup() {
+  Serial.begin(9600);  pinMode(PIR_PIN, INPUT);
+  pinMode(RELAY_PIN, OUTPUT);  pinMode(BUZZER_PIN, OUTPUT);
+  delay(1000);  Serial.println(<span class="st">"PIR warm-up..."</span>);
+  delay(${F("warm")});   <span class="cm">// warm-up for the PIR</span>
+}
+
+<span class="kw">void</span> loop() {
+  <span class="kw">int</span> currentMotion = digitalRead(PIR_PIN);
+  <span class="kw">if</span> (currentMotion == HIGH &amp;&amp; lastMotionState == LOW) {
+    motionStartTime = millis();  digitalWrite(RELAY_PIN, HIGH);  <span class="cm">// lights ON</span>
+  } <span class="kw">else if</span> (currentMotion == LOW &amp;&amp; lastMotionState == HIGH) {
+    digitalWrite(RELAY_PIN, LOW);  digitalWrite(BUZZER_PIN, LOW);  <span class="cm">// lights OFF</span>
+  }
+  dwellDuration = (currentMotion == HIGH) ? millis() - motionStartTime : 0;
+  lastMotionState = currentMotion;${e?`
+  <span class="cm">// extension: security alert from your Criterion B product</span>
+  digitalWrite(BUZZER_PIN, currentMotion == HIGH &amp;&amp; dwellDuration &gt; ${F("buz")});`:""}
+
+  <span class="kw">if</span> (millis() - lastTelemetryTime >= TELEMETRY_INTERVAL) {
+    <span class="kw">String</span> statusStr = <span class="st">"VACANT_STANDBY"</span>;
+    <span class="kw">if</span> (currentMotion == HIGH) {
+      <span class="kw">if</span> (dwellDuration &gt; ${F("cont")}) statusStr = <span class="st">"CONTINUOUS_PRESENCE"</span>;
+      <span class="kw">else if</span> (dwellDuration &gt; ${F("transit")}) statusStr = <span class="st">"ACTIVE_OCCUPANCY"</span>;
+      <span class="kw">else</span> statusStr = <span class="st">"TRANSIT_PASSING"</span>;
+    }
+    Serial.print(<span class="st">"Motion: "</span>); ... Serial.println(statusStr);
+  }
+}`;
+$("sketch").querySelectorAll("input.yel").forEach(i=>i.oninput=()=>{const v=parseInt(i.value,10);if(!isNaN(v)&&v>=0){P[i.dataset.k]=v;onParams()}})}
+function statusOf(m,d){if(!m)return"VACANT_STANDBY";return d>P.cont?"CONTINUOUS_PRESENCE":d>P.transit?"ACTIVE_OCCUPANCY":"TRANSIT_PASSING"}
+$("ext").onchange=()=>{drawSketch()};
+let AC=null;function tone(f,d,type,v){if(!$("snd").checked)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,AC.currentTime);g.gain.exponentialRampToValueAtTime(v||.12,AC.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d+.02)}catch(e){}}
+const jingle=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.22,"triangle",.18),i*130));
+/* person */
+function stay(ms){holdTill=Math.max(holdTill,now+ms);tone(520,.08,"square",.05);ensure()}
+$("bWalk").onclick=()=>{holdTill=now+1500;ensure()};$("bWork").onclick=()=>{holdTill=now+4000;ensure()};$("bStay").onclick=()=>{holdTill=now+9000;ensure()};
+$("bHold").onclick=()=>{holdOn=!holdOn;$("bHold").classList.toggle("run",holdOn);ensure()};
+function ensure(){if(!running){running=false;$("runBtn").click()}}
+function drawPerson(on){const x=on?160+((now/60)%60):60;$("person").setAttribute("transform",`translate(${on?150:50},${on?110:110}) scale(1)`);$("person").setAttribute("opacity",on?1:.25)}
+function tick(dt){
+  const pres=holdOn||now<holdTill||(day&&day.on(now));
+  let ghost=false;if($("fault").checked&&Math.random()<.01*dt/100)ghost=true;
+  present=pres||ghost;
+  const cm=present?1:0;
+  if(cm&&!motion){start=now;relay=1;seen.rel=true}
+  else if(!cm&&motion){relay=0;buzzer=0;seen.relOff=true}
+  motion=cm;dwell=motion?now-start:0;
+  if(P.buz&&$("ext").checked)buzzer=(motion&&dwell>P.buz)?1:0;
+  $("bulb").setAttribute("fill",relay?"#ffd60a":"#4d4520");$("buz").setAttribute("fill",buzzer?"#ff3b30":"#512a2a");drawPerson(present);
+  if(buzzer&&Math.random()<.2)tone(880,.06,"square",.04);
+  if(now-lastTel>=P.interval){lastTel=now;emit()}
+  now+=dt;
+}
+let lastSt="";
+function emit(){const st=statusOf(motion,dwell),label=motion?"MOTION_DETECTED":"NO_MOTION";
+ const line=`Motion: ${motion}  |  State: ${label}  |  Dwell_Time_ms: ${Math.round(dwell)}  |  Status: ${st}`;
+ const sm=$("serial");sm.textContent+=line+"\n";if(sm.textContent.length>16000)sm.textContent=sm.textContent.slice(-12000);sm.scrollTop=sm.scrollHeight;
+ const t=new Date(wall+now),pad=n=>String(n).padStart(2,"0");const stamp=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())} ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
+ rows.push([stamp,(now/1000).toFixed(2),motion,label,Math.round(dwell),st]);if(rows.length>600)rows.shift();try{localStorage.setItem("ds_pir_log",JSON.stringify(rows))}catch(e){}$("nRows").textContent=rows.length;
+ hist.push([motion,dwell]);if(hist.length>60)hist.shift();
+ $("vMot").textContent=motion;$("vDw").textContent=(dwell/1000).toFixed(1);$("mDw").style.width=Math.min(100,dwell/P.cont*100/1.3)+"%";$("vSt").textContent=st;$("vSt").style.background=COL[st];$("clock").textContent="t = "+Math.round(now/1000)+" s";
+ if(st!==lastSt){tone({VACANT_STANDBY:196,TRANSIT_PASSING:330,ACTIVE_OCCUPANCY:440,CONTINUOUS_PRESENCE:660}[st],.12,"sine",.08);lastSt=st}
+ if(st==="TRANSIT_PASSING")seen.tr=true;if(st==="ACTIVE_OCCUPANCY")seen.ac=true;if(st==="CONTINUOUS_PRESENCE")seen.co=true;
+ drawChart();checkMissions()}
+function drawChart(){const cv=$("chart"),g=cv.getContext("2d"),W=cv.width,H=cv.height;g.clearRect(0,0,W,H);const cs=getComputedStyle(document.body);const ink=cs.getPropertyValue("--muted")||"#666",line=cs.getPropertyValue("--line")||"#ccc";
+ g.font="12px system-ui";g.fillStyle=ink;g.strokeStyle=line;g.lineWidth=1;const mx=Math.max(10000,P.cont*1.3);
+ for(let i=0;i<=4;i++){const y=14+(H-34)*i/4;g.beginPath();g.moveTo(46,y);g.lineTo(W-20,y);g.stroke();g.fillText((mx*(1-i/4)/1000).toFixed(0)+" s",6,y+4)}
+ const th=v=>14+(H-34)*(1-v/mx);g.strokeStyle="#d97706";g.setLineDash([3,4]);[P.transit,P.cont].forEach(v=>{g.beginPath();g.moveTo(46,th(v));g.lineTo(W-20,th(v));g.stroke()});g.setLineDash([]);
+ const n=hist.length;if(n<2)return;const X=i=>46+(W-66)*i/59;
+ g.lineWidth=2.4;g.strokeStyle="#0891b2";g.beginPath();hist.forEach((h,i)=>{const y=th(Math.min(h[1],mx));i?g.lineTo(X(i),y):g.moveTo(X(i),y)});g.stroke();
+ g.fillStyle="#16a34a";hist.forEach((h,i)=>{if(h[0])g.fillRect(X(i)-2,H-18,5,8)});
+ g.fillStyle="#0891b2";g.fillText("Dwell time",54,12);g.fillStyle="#16a34a";g.fillText("green ticks = motion HIGH",130,12);g.fillStyle="#d97706";g.fillText("dashed = thresholds",300,12)}
+function stopAll(){running=false;clearInterval(timer);day=null;$("runBtn").disabled=false;$("dayBtn").disabled=false;$("stopBtn").disabled=true}
+function startTimer(fn){curFn=fn;clearInterval(timer);const sp=+$("spd").value;timer=setInterval(fn,Math.max(15,100/sp));running=true;$("runBtn").disabled=true;$("dayBtn").disabled=true;$("stopBtn").disabled=false}
+const step=()=>tick(100);
+$("runBtn").onclick=()=>{tone(440,.1);startTimer(step)};
+$("stopBtn").onclick=stopAll;
+$("dayBtn").onclick=()=>{tone(330,.1);const t0=now;const ev=[[10,12],[30,31.5],[50,56],[75,76],[90,98],[120,150],[170,171.5],[190,196],[215,217],[240,262]].map(a=>[t0+a[0]*1000,t0+a[1]*1000]);const end=t0+280000;day={on:t=>ev.some(e=>t>=e[0]&&t<e[1]),end};startTimer(()=>{step();if(now>=end){stopAll();seen.day=true;checkMissions()}})};
+$("spd").onchange=()=>{if(running&&curFn){clearInterval(timer);timer=setInterval(curFn,Math.max(15,100/+$("spd").value))}};
+$("clr").onclick=()=>{$("serial").textContent="";rows=[];hist=[];try{localStorage.setItem("ds_pir_log","[]")}catch(e){}$("nRows").textContent=0;drawChart()};
+$("csv").onclick=()=>{const t="Timestamp,Elapsed_Seconds,Motion_State,State_Label,Dwell_Time_ms,Status\n"+rows.map(r=>r.join(",")).join("\n")+"\n";const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/csv"}));a.download="motion_telemetry_data.csv";a.click()};
+function calc(){const x=+$("cRaw").value;$("cOut").textContent=`Dwell_Time_ms = ${x}\nIs ${x} > ${P.cont} ?  ${x>P.cont?"yes -> CONTINUOUS_PRESENCE":"no"}\n`+(x>P.cont?"":`Is ${x} > ${P.transit} ?  ${x>P.transit?"yes -> ACTIVE_OCCUPANCY":"no -> TRANSIT_PASSING"}\n`)+`(these tests only run while Motion = 1. With Motion = 0 the status is always VACANT_STANDBY.)`}
+$("cRaw").oninput=calc;
+const M=[["See TRANSIT_PASSING","Press Walk past. Someone going through quickly.",()=>seen.tr],
+["See ACTIVE_OCCUPANCY","Press Work nearby (4 s). The dwell time passes the first threshold.",()=>seen.ac],
+["See CONTINUOUS_PRESENCE","Press Stay put (9 s) and watch the status change twice.",()=>seen.co],
+["Watch the relay: lights on when motion starts, off when it stops","Look at the bulb while you walk past. It follows the PIR state.",()=>seen.rel&&seen.relOff],
+["Change a threshold so a 3 second stay counts as CONTINUOUS_PRESENCE","Which number decides CONTINUOUS_PRESENCE? Make it lower than 3000, then Hold motion for 4 s.",()=>P.cont<3000&&statusOf(1,3500)==="CONTINUOUS_PRESENCE"&&seen.co2],
+["Play a school day to the end","Press Play a school day, then look at the dwell curve for ten visits.",()=>seen.day]];
+let done=new Set(),posted=false;
+function drawMissions(){$("missions").innerHTML=M.map((m,i)=>`<div class="mission ${done.has(i)?"ok":""}"><span class="ic">${done.has(i)?"✔":"○"}</span><div><strong>${m[0]}</strong><small>${m[1]}</small></div></div>`).join("");$("mCount").textContent=done.size+" / "+M.length}
+function checkMissions(){if(P.cont<3000&&motion&&dwell>P.cont&&dwell<5000&&statusOf(motion,dwell)==="CONTINUOUS_PRESENCE")seen.co2=true;
+ let ch=false;M.forEach((m,i)=>{if(!done.has(i)&&m[2]()){done.add(i);ch=true}});if(ch){tone(784,.15,"triangle",.15);drawMissions()}
+ if(done.size===M.length&&!posted){posted=true;jingle();$("doneMsg").textContent="🎉 All missions complete!";try{const u=currentUser();if(u&&typeof postToSheet==="function"){postToSheet("quiz",{Name:u.name,Class:u.klass,Criterion:"C",Topic:"Motion sensor",Lesson:"Lab 1 Virtual ESP32",Quiz:"Lab · Motion sensor · Virtual ESP32",Score:6,Total:6,Percent:100,TimeTakenSec:0});$("doneMsg").textContent+=" Saved to your teacher's Google Sheet."}else $("doneMsg").textContent+=" Log in at the top to save it to the class Google Sheet."}catch(e){}}}
+function onParams(){calc();drawMissions();checkMissions();drawChart()}
+$("copyEv").onclick=()=>{const t=`Virtual ESP32 test evidence (simulator, not the physical kit)\nSketch settings: ACTIVE_OCCUPANCY if dwell > ${P.transit} ms; CONTINUOUS_PRESENCE if dwell > ${P.cont} ms; telemetry every ${P.interval} ms\nMissions complete: ${done.size}/${M.length}\nLast 8 readings:\n`+$("serial").textContent.trim().split("\n").slice(-8).join("\n");try{navigator.clipboard.writeText(t);$("copySt").textContent="Copied. Paste it into your C3 log and say it is simulator evidence."}catch(e){$("copySt").textContent="Select and copy from the Serial Monitor instead."}};
+drawSketch();calc();drawMissions();drawChart();drawPerson(false);
+window.__ds={P,statusOf,seen,done,M,rows:()=>rows,tick,stay};
+})();
+</script></body></html>
