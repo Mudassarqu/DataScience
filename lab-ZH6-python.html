@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 2 · Humidity &amp; Temperature for Crops Python data lab | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/site.css"><link rel="stylesheet" href="assets/sim.css"><link rel="stylesheet" href="assets/ds.css">
+<style>
+.steps{display:flex;flex-wrap:wrap;gap:8px}.steps button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;font-weight:700;cursor:pointer;display:flex;gap:6px;align-items:center}
+.steps button.on{background:var(--navy);color:#fff;border-color:var(--navy)}.steps button .d{color:var(--ok);font-weight:800}
+.steps button.on .d{color:#7be3a2}
+.hint{background:#fff7e0;border:1px solid #f0d58a;border-radius:9px;padding:8px 12px;margin-top:8px;color:#4a3a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hint{background:#3a2f10;border-color:#6b5520;color:#f6e3a8}}
+.out{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:10px 12px;font:13px/1.5 Consolas,Menlo,monospace;min-height:80px;max-height:240px;overflow:auto;white-space:pre-wrap}.out .err{color:#ff9d8f}
+table.dt{border-collapse:collapse;width:100%;font:12.5px Consolas,Menlo,monospace}table.dt th,table.dt td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left}table.dt th{background:var(--navy);color:#fff;position:sticky;top:0}
+table.dt tr.bad td{background:#fde8e4;color:#7a1d12}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) table.dt tr.bad td{background:#4a1d17;color:#ffc2b8}}
+.scroll{max-height:250px;overflow:auto;border-radius:8px;border:1px solid var(--line)}
+.fig{margin:0}.fig figcaption{font-size:.84rem;color:var(--muted);margin-top:4px}
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media (max-width:700px){.charts{grid-template-columns:1fr}}
+.lock{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted)}
+textarea.ans{width:100%;min-height:70px;box-sizing:border-box;border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit;background:var(--panel);color:var(--ink)}
+.win{background:#effaf3;border:1px solid #9bd8b4;color:#14532d;border-radius:10px;padding:10px 14px;margin-top:10px}
+</style></head><body>
+<div id="dsnav" data-tab="lab2" data-lesson="ZH6"></div>
+<div class="top"><div class="in"><div><span class="tag">ZH6 Humidity &amp; Temperature for Crops · C2 Technical skills · Python</span><h1>Lab 2 · Humidity &amp; Temperature for Crops Python data lab</h1></div><p>Collect, clean, analyse and test one day of data from your Greenhouse Pole Station, then check it against your B1 specification. The steps follow your kit scripts 1, 2 and 3. Everything runs in your browser.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
+<div class="wrapx"><div class="g2">
+<div class="col">
+ <section class="panel"><h2>Choose your data</h2>
+  <div class="row"><select id="dsel" aria-label="Dataset"><option value="day">🔬 One day WITHOUT your design change (144 readings, model data)</option><option value="dayfix">🛠 The same day WITH your design change (144 readings, model data)</option><option value="messy">🧪 Messy practice set (144 rows, synthetic, full of faults)</option><option value="lab1">🔌 Readings from Lab 1 (Humidity &amp; Temperature for Crops virtual ESP32)</option></select><span class="note" id="dnote"></span></div></section>
+ <section class="panel"><div class="steps" id="steps" role="tablist"></div></section>
+ <section class="panel"><h2 id="sTitle"></h2><div id="sGoal"></div><div id="hintBox"></div>
+  <div class="editor" style="margin-top:10px"><pre class="gutter" id="gutter"></pre><textarea id="code" class="code" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python code editor"></textarea></div>
+  <div class="row" style="margin-top:10px"><button class="btn run" id="checkBtn" disabled>✔ Check my code</button><button class="btn alt" id="runBtn" disabled>▶ Just run it</button><button class="btn alt" id="hintBtn">💡 Hint</button><button class="btn alt" id="solBtn">Show solution</button><button class="btn alt" id="resetBtn">Reset</button><span class="status" id="pystatus">Loading Python…</span></div></section>
+ <section class="panel"><h2>Output</h2><div class="out" id="out">Run your code to see the output here.</div></section>
+ <section class="panel"><h2>Test results</h2><div class="score" id="score"></div><ul class="checks" id="checks"><li class="wait"><span class="ic">·</span><div>Press “Check my code”.</div></li></ul><div id="win"></div></section>
+</div>
+<div class="col">
+ <section class="panel"><h2>Your data (first rows) <span class="links" id="dcount"></span></h2><div class="scroll"><table class="dt" id="dtab"></table></div><p class="note" style="margin:6px 0 0">Pink rows are faulty. Can you see why?</p></section>
+ <section class="panel"><h2>Figures from your cleaned data <span class="links" id="figst"></span></h2><div id="figs"><div class="lock">🔒 Pass <strong>Step 2 · Clean</strong> and your own <code>clean()</code> function will draw four figures here.</div></div></section>
+ <section class="panel"><h2>Explain it (C2) and justify it (C4)</h2>
+  <p class="note" style="margin-top:0">Write in your own words. Your answers are saved in this browser and sent to your teacher's Google Sheet when you are logged in.</p>
+  <label for="q1"><strong>1.</strong> Step 2 removed rows from the day. Name two kinds of faulty row you found and say how your clean() recognised each one.</label><textarea class="ans" id="q1"></textarea><div class="row" style="margin:4px 0 10px"><button class="btn alt sm" data-save="q1">Save</button><span class="status" id="st-q1"></span></div>
+  <label for="q2"><strong>2.</strong> Compare your Step 4 boundaries with the 40 and 35 in your sketch. Would you change the sketch? Use the Step 5 result as evidence.</label><textarea class="ans" id="q2"></textarea><div class="row" style="margin:4px 0 10px"><button class="btn alt sm" data-save="q2">Save</button><span class="status" id="st-q2"></span></div>
+  <label for="q3"><strong>3.</strong> Run Step 5 on both days. What changed when the design change (Sensor at plant height with at least 30 % open airflow (spec 7.2)) was fitted, and which B1 criterion does it help? Justify the change (C4) with numbers.</label><textarea class="ans" id="q3"></textarea><div class="row" style="margin:4px 0 0"><button class="btn alt sm" data-save="q3">Save</button><span class="status" id="st-q3"></span></div></section>
+</div></div></div>
+<script>window.LESSON={name:"Lab 2 Humidity &amp; Temperature for Crops Python data lab"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script><script src="assets/cs-ZH6.js"></script><script src="assets/cs-steps.js"></script><script src="assets/pyrunner.js"></script><script src="assets/cs-engine2.js"></script>
+</body></html>

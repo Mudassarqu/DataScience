@@ -1,0 +1,48 @@
+CRITERION C: UPLOAD GUIDE (GitHub web, about 10 minutes)
+
+WHERE EVERYTHING GOES
+Everything goes in the ROOT of your DataScience repository, the same level as
+README.md, assets, downloads and videos. Folders merge with the folders already
+there. Nothing in Criterion A, B or D is replaced.
+
+Before you start: unzip this package on your computer. Upload the CONTENTS, not the zip.
+GitHub's web uploader accepts at most 100 files at a time, so upload in 3 batches.
+
+BATCH 1 · pages (55 files)
+  Repo root -> Add file -> Upload files -> drag all .html files from the unzipped folder.
+  Commit message: "Criterion C pages".
+  New: criteria-c.html (the new Criteria C page), lesson-*.html, lab-*.html.
+  Updated (small additive edits): playground.html, tutorial.html, tutorials.html, quiz.html.
+
+BATCH 2 · assets folder (61 files)
+  Drag the folder  assets  (it contains cimg). GitHub merges it into the existing assets folder.
+  New: cs-*.js, challenges-cs.js, tutorials-cs.js, quizzes-cs.js, cimg/*.png.
+  Updated: ds-nav.js (adds the 19 lessons to the dropdown; the Criteria C tab now opens criteria-c.html).
+
+BATCH 3 · downloads, videos, script (40 files)
+  Drag the folders  downloads  and  videos  (booklets, all-booklets zip, Learn videos).
+  Drag the folder  google-apps-script  to replace Code.gs there (and the Code.gs in the root, if you keep one).
+
+THEN CHECK (wait about 1 minute for GitHub Pages, press Ctrl+F5)
+  1. Open  https://mudassarqu.github.io/DataScience/criteria-c.html
+  2. Click any card: Plan, Lab 1, Lab 2, Practice, Learn, Quiz, Summative booklet.
+  3. In the lesson dropdown the 19 lessons start with their code (CA1, GH2, ZH7 ...).
+
+IF A PAGE LOOKS UNSTYLED OR A LAB DOES NOT RUN
+  The repo must already contain the files from the earlier Criterion C packages:
+  assets/site.css, sim.css, ds.css, site.js, pyrunner.js, config.js, quiz-engine.js,
+  lesson-CA3.html, lab-CA3-esp32.html, lab-CA3-python.html, lab-esp32.html, lab-python.html,
+  lab-motion.html, lab-python-motion.html. If one is missing, upload it from that earlier package.
+  Do not open the pages from the unzipped folder to test: they need the shared files from the repo.
+
+GOOGLE SHEET (3 minutes)
+  1. Open the Google Sheet -> Extensions -> Apps Script.
+  2. Select all, delete, paste the whole of Code.gs. Save.
+  3. Deploy -> Manage deployments -> pencil -> Version: New version -> Deploy.
+     The /exec link stays the same, so assets/config.js needs no change.
+  4. Reload the Sheet. Menu "DS PRO" -> "Send test rows for A, B, C and D".
+     Open the sheet Criteria_Check: A, B, C and D must each show 1 attempt.
+     Then menu "DS PRO" -> "Delete test rows".
+  Sheets created automatically: Logins, Quiz_Scores, Strand_Responses, Best_Scores,
+  Gradebook, Class_Summary, Criteria_Check, Unrouted.
+  Students must log in (name and class) on the page before the quiz, otherwise a score cannot be saved.

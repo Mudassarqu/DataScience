@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 1 · Vibration &amp; Structural Safety virtual ESP32 | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/site.css"><link rel="stylesheet" href="assets/sim.css"><link rel="stylesheet" href="assets/ds.css">
+<style>.pic{position:relative;border:3px solid transparent;border-radius:12px;background:var(--chip);text-align:center;padding:6px}.pic img{max-width:100%;max-height:230px;border-radius:8px}.pic.fixed{border-color:#1b8a3d}.pic.hot:not(.fixed){border-color:#d97706}#specChecks{list-style:none;padding:0;margin:8px 0}#specChecks li{display:flex;gap:8px;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:var(--chip)}#specChecks li.ok{border-left:4px solid #1b8a3d}#specChecks li.no{border-left:4px solid #c62828}#specChecks small{display:block;color:var(--muted)}.dt tr.bad td{background:rgba(198,40,40,.12)}.b1q{background:var(--chip);border-left:4px solid #0891b2;padding:8px 10px;border-radius:8px;font-size:.92rem}</style></head><body>
+<div id="dsnav" data-tab="lab1" data-lesson="SC6"></div>
+<div class="top"><div class="in"><div><span class="tag">SC6 Vibration &amp; Structural Safety · C2 Technical skills · Virtual hardware</span><h1>Lab 1 · Virtual ESP32 + Bridge Tripod Seismograph</h1></div><p>The real kit sketch for the Vibration sensor runs here inside your Criterion B design. Edit the yellow numbers, change the real world with the slider and test your design against your own B1 function spec. No kit needed.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class, for example 9A" autocomplete="off"><button class="btn sm" id="loginBtn">Save</button><span id="loginSt" class="note"></span></div>
+<div class="wrapx"><div class="g2">
+<div class="col">
+ <section class="panel"><h2>Virtual hardware <span class="links" id="clock"></span></h2>
+  <svg viewBox="0 0 520 200" width="100%" role="img" aria-label="ESP32 board wired to the Vibration sensor and three LEDs" style="display:block">
+   <rect width="520" height="200" rx="12" fill="var(--chip)"/>
+   <rect x="30" y="60" width="110" height="70" rx="10" fill="#f0883e"/><text x="85" y="92" text-anchor="middle" font-size="26">📳</text><text x="85" y="116" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">Vibration sensor</text>
+   <path d="M140 95H250" stroke="#d9a400" stroke-width="3" fill="none"/>
+   <rect x="250" y="30" width="240" height="140" rx="12" fill="#12263a" stroke="#4d6a85" stroke-width="2"/>
+   <rect x="320" y="46" width="70" height="34" rx="4" fill="#2c4a66"/><text x="355" y="68" text-anchor="middle" font-size="13" fill="#bcd2e8" font-weight="700">ESP32</text>
+   <text x="262" y="100" font-size="11" fill="#e0b92e">GPIO 36 (VP)</text>
+   <circle id="ledR" cx="440" cy="60" r="11" fill="#512a2a"/><circle id="ledY" cx="440" cy="92" r="11" fill="#4d4520"/><circle id="ledG" cx="440" cy="124" r="11" fill="#1f4a30"/>
+   <text x="458" y="64" font-size="10" fill="#9bb0c4">25</text><text x="458" y="96" font-size="10" fill="#9bb0c4">26</text><text x="458" y="128" font-size="10" fill="#9bb0c4">27</text>
+   <text x="370" y="158" text-anchor="middle" font-size="11" fill="#9bb0c4">USB → Serial Monitor</text>
+  </svg></section>
+ <section class="panel"><h2>Your B3 design: Bridge Tripod Seismograph <span class="links"><label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fix"> 🛠 Fit the design change (C4)</label></span></h2>
+  <div class="pic" id="pic"><img src="assets/cimg/SC6_design.png" alt="Your selected B3 design, Bridge Tripod Seismograph" onerror="this.style.display='none'"></div>
+  <p class="note" style="margin:6px 0 0"><b>Rigid bolted fixing so the sensor moves with the structure (spec 7.2)</b><br><span id="fixNote"></span></p></section>
+ <section class="panel"><div class="big3"><div><small>RAW READING</small><b id="vRaw">-</b></div><div><small>VALUE</small><b id="vVal">-</b></div><div><small>STATUS</small><span class="cond" id="vCond">-</span></div></div></section>
+ <section class="panel"><h2>Shake strength at the structure (true, from a reference accelerometer) <span class="links" id="w1v"></span></h2>
+  <input type="range" id="w1" style="width:100%" aria-label="Shake strength at the structure (true, from a reference accelerometer)">
+  
+  <div class="presets" style="margin-top:8px"><button class="btn alt sm" data-p="0">🧱 Still 0</button><button class="btn alt sm" data-p="25">👆 Light tap 25</button><button class="btn alt sm" data-p="45">✊ Firm tap 45</button><button class="btn alt sm" data-p="90">🔨 Shock 90</button></div>
+  <div class="row" style="margin-top:10px"><button class="btn run" id="runBtn">▶ Run virtual ESP32</button><button class="btn alt" id="dayBtn">📅 Play a bridge afternoon</button><button class="btn alt" id="stopBtn" disabled>■ Stop</button></div>
+  <div class="row" style="margin-top:8px"><label for="spd" class="note">Speed</label><select id="spd"><option value="1">1×</option><option value="5">5×</option><option value="25" selected>25×</option></select><label for="noise" class="note">Sensor noise</label><input type="range" id="noise" min="0" max="30" value="10" style="width:90px"><span class="note" id="noiseV">10</span>
+   <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fault"> 🔌 Loose wire fault</label><label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="snd" checked> 🔊 Sound</label></div></section>
+ <section class="panel"><h2>Missions <span class="links" id="mCount">0 / 8</span></h2><div class="col" id="missions" style="gap:8px"></div><p class="status" id="doneMsg" style="margin-top:8px"></p></section>
+</div>
+<div class="col">
+ <section class="panel"><h2>vibration-sensor.ino (ESP32) in your product <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
+  <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (status LEDs for your product)</label></section>
+ <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
+  <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-SC6-python.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
+ <section class="panel"><h2>B1 function spec 7.1 test</h2>
+  <p class="b1q" id="b1q"></p>
+  <div class="row" style="margin-top:8px"><button class="btn run" id="specBtn">▶ Run the spec test</button></div><p class="status" id="specV" style="margin:8px 0 0;font-weight:700"></p>
+  <ul id="specChecks"></ul>
+  <div class="scroll" style="margin-top:8px"><table class="dt" id="specT"></table></div></section>
+ <section class="panel"><h2>Live chart (last 60 readings)</h2><canvas class="ch" id="chart" width="900" height="260" role="img" aria-label="Line chart of the value and the raw reading"></canvas></section>
+ <section class="panel calc"><h2>Do the sketch maths yourself</h2><label><span id="cLab"></span> <input id="cRaw" type="number" step="any"></label> <span class="note" id="cNote"></span><pre id="cOut"></pre></section>
+</div></div></div>
+<script>window.LESSON={name:"Lab 1 Vibration &amp; Structural Safety virtual ESP32"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script>
+<script src="assets/cs-core.js"></script><script src="assets/cs-SC6.js"></script><script src="assets/cs-lab1.js"></script>
+</body></html>
