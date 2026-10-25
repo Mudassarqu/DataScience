@@ -106,7 +106,7 @@ function finishQuiz() {
   const t = Math.round((Date.now() - quizState.startedAt) / 1000);
   if (!u) st.textContent = "Log in above next time to save your score.";
   else {
-    postToSheet("quiz", { Name: u.name, Class: u.klass, Lesson: LESSON_NAME, Quiz: LESSON_NAME + " Quiz",
+    postToSheet("quiz", { Name: u.name, Class: u.klass, Criterion: (window.QUIZ_CRITERION || "B"), Lesson: LESSON_NAME, Quiz: LESSON_NAME + " Quiz",
       Score: quizState.score, Total: total, Percent: Math.round(quizState.score / total * 100), TimeTakenSec: t });
     st.textContent = hasUrl() ? "✅ Score saved to the class Google Sheet." : "✅ Score saved in this browser (Sheet link not configured yet).";
   }
