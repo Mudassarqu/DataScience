@@ -19,7 +19,7 @@
 <div class="path"><a href="#t01">① Start here</a><a href="playground.html">② Practise challenges</a><a href="lab-esp32.html">③ Run the virtual ESP32</a><a href="lab-python.html">④ Clean and chart your data</a></div>
 <div class="grid" id="grid"></div></div>
 <script>window.LESSON={name:"Python Tutorials"};</script>
-<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script><script src="assets/tutorials-ds.js"></script><script src="assets/tutorials-cs.js"></script>
+<script src="assets/config.js?v=20261025"></script><script src="assets/site.js?v=20261025"></script><script src="assets/ds-nav.js?v=20261025"></script><script src="assets/tutorials-ds.js?v=20261025"></script><script src="assets/tutorials-cs.js?v=20261025"></script>
 <script>
 let seen={};try{seen=JSON.parse(localStorage.getItem("ds_tutdone")||"{}")}catch(e){}
 document.getElementById("grid").innerHTML=TUTORIALS.map(t=>`<a class="card" id="t${t.id}" href="tutorial.html?id=${t.id}"><div class="hd"><span>${t.emoji}</span><b>LESSON ${t.id}</b></div><div class="bd"><h3>${t.title}</h3><p>${t.goal}</p></div><div class="ft"><span>🎬 ${t.mins} min video</span><span>·</span><span>${t.slides.length} parts</span>${seen[t.id]?'<span class="done" style="margin-left:auto">✔ done</span>':""}</div></a>`).join("");
