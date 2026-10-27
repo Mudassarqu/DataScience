@@ -6,6 +6,7 @@
    ========================================================================== */
 window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUGObrXqHTlkI6jchze0Dfp9JEP2w36K9tRN4lDwdveJp16HVbX8bsKWJPTuPB20jZgQ/exec";
 
+
 /* ==========================================================================
    FOCUS MODE (added): shows only Simulators, Playground, Tutorials and Block Coding.
    Hides the Criteria A, B and D pages from the menus and home page. Criterion C stays.
@@ -39,8 +40,17 @@ window.FOCUS_MODE = true;
       if (n && n === ls.length) hide(box.tagName === "TABLE" ? (box.closest(".card") || box) : box);
     });
   };
+  var byHeading = function () {
+    [].slice.call(document.querySelectorAll("h1,h2,h3")).forEach(function (h) {
+      if (!/criteri(on|a)\s*[abd]\b/i.test(h.textContent)) return;
+      var sec = h.closest("section");
+      if (sec) { hide(sec); return; }
+      var lvl = h.tagName, n = h;
+      while (n) { var nx = n.nextElementSibling; hide(n); if (!nx || /^H[12]$/.test(nx.tagName) && nx !== h) break; n = nx; }
+    });
+  };
   document.addEventListener("DOMContentLoaded", function () {
-    pass(); setTimeout(pass, 800); setTimeout(pass, 2500);
+    pass(); byHeading(); setTimeout(function () { pass(); byHeading(); }, 800); setTimeout(function () { pass(); byHeading(); }, 2500);
     var p = document.querySelector(".landing-hero p");
     if (p && /exemplars/i.test(p.textContent)) p.textContent = "Virtual UGOT simulators, block coding, a Python playground and guided tutorials for MYP Design, Grade 10, Ambassador International Academy.";
     var main = document.querySelector("main");
@@ -58,4 +68,3 @@ window.FOCUS_MODE = true;
     }
   });
 })();
-
