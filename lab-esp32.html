@@ -1,0 +1,148 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 1 · Virtual ESP32 + LDR | Grade 9 DS PRO</title>
+<link rel="stylesheet" href="assets/dspro.css"></head><body>
+<div id="dsnav" data-tab="lab1" data-lesson="light"></div>
+<div class="top"><div class="in"><div><span class="tag">C2 Technical skills · Virtual hardware</span><h1>Lab 1 · Virtual ESP32 + Light Detector (LDR)</h1></div><p>This is the real sketch from your DataSciensPro kit. Change the <strong>yellow boxes</strong>, move the light, and watch the Serial Monitor change.</p></div></div>
+<div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
+<div class="wrapx"><div class="g2">
+<div class="col">
+ <section class="panel"><h2>Virtual hardware <span class="links" id="clock"></span></h2>
+  <svg viewBox="0 0 520 230" width="100%" role="img" aria-label="ESP32 board with an LDR light sensor on pin 36 and three LEDs" style="display:block">
+   <defs><radialGradient id="glow"><stop offset="0" stop-color="#ffd24a" stop-opacity="1"/><stop offset="1" stop-color="#ffd24a" stop-opacity="0"/></radialGradient></defs>
+   <rect width="520" height="230" rx="12" fill="var(--chip)"/>
+   <circle id="sunGlow" cx="70" cy="62" r="52" fill="url(#glow)" opacity=".5"/><circle id="sun" cx="70" cy="62" r="22" fill="#e2a31b"/>
+   <text x="70" y="112" text-anchor="middle" font-size="12" fill="var(--muted)">Light source</text>
+   <g transform="translate(120,150)"><rect width="56" height="34" rx="6" fill="#f0883e"/><path d="M8 17h8l4-10 8 20 6-18 4 8h10" fill="none" stroke="#fff" stroke-width="2.4"/></g>
+   <text x="148" y="205" text-anchor="middle" font-size="12" fill="var(--muted)">LDR</text>
+   <path d="M176 167H250" stroke="#d9a400" stroke-width="3" fill="none"/>
+   <rect x="250" y="40" width="240" height="150" rx="12" fill="#12263a" stroke="#4d6a85" stroke-width="2"/>
+   <rect x="320" y="56" width="70" height="34" rx="4" fill="#2c4a66"/><text x="355" y="78" text-anchor="middle" font-size="13" fill="#bcd2e8" font-weight="700">ESP32</text>
+   <text x="262" y="164" font-size="11" fill="#e0b92e">GPIO 36 (VP)</text>
+   <circle id="ledR" cx="440" cy="70" r="11" fill="#512a2a"/><circle id="ledY" cx="440" cy="102" r="11" fill="#4d4520"/><circle id="ledG" cx="440" cy="134" r="11" fill="#1f4a30"/>
+   <text x="458" y="74" font-size="10" fill="#9bb0c4">25</text><text x="458" y="106" font-size="10" fill="#9bb0c4">26</text><text x="458" y="138" font-size="10" fill="#9bb0c4">27</text>
+   <text x="370" y="178" text-anchor="middle" font-size="11" fill="#9bb0c4">USB → Serial Monitor</text>
+  </svg></section>
+ <section class="panel"><div class="big3"><div><small>RAW ADC</small><b id="vRaw">-</b></div><div><small>LIGHT %</small><b id="vPct">-</b><div class="meter" style="margin-top:4px"><i id="mPct" style="width:0"></i></div></div><div><small>CONDITION</small><span class="cond" id="vCond" style="background:#64748b">-</span></div></div></section>
+ <section class="panel"><h2>Light reaching the LDR (the real world) <span class="links" id="lvlTxt">0 %</span></h2>
+  <input type="range" id="light" min="0" max="100" value="0" style="width:100%" aria-label="Light level in the room, 0 to 100 percent"><div class="row" style="justify-content:space-between"><span class="note">pitch dark</span><span class="note">direct sunlight / torch</span></div>
+  <div class="presets" style="margin-top:8px"><button class="btn alt sm" data-p="0">🖐 Cover with hand</button><button class="btn alt sm" data-p="7">⚫ Room lights off</button><button class="btn alt sm" data-p="39">⛅ Indoor shade</button><button class="btn alt sm" data-p="71">💡 Classroom lights</button><button class="btn alt sm" data-p="96">☀ Sunlight / torch</button></div>
+  <div class="row" style="margin-top:10px"><button class="btn run" id="runBtn">▶ Run virtual ESP32</button><button class="btn alt" id="dayBtn">📅 Play the whole day</button><button class="btn alt" id="stopBtn" disabled>■ Stop</button></div>
+  <div class="row" style="margin-top:8px"><label for="spd" class="note">Speed</label><select id="spd"><option value="1">1×</option><option value="5">5×</option><option value="25" selected>25×</option></select><label for="noise" class="note">Sensor noise</label><input type="range" id="noise" min="0" max="40" value="8" style="width:120px"><span class="note" id="noiseV">8</span>
+   <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fault"> 🔌 Loose wire fault</label><label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="snd" checked> 🔊 Sound</label></div></section>
+ <section class="panel"><h2>Missions <span class="links" id="mCount">0 / 6</span></h2><div class="col" id="missions" style="gap:8px"></div><p class="status" id="doneMsg" style="margin-top:8px"></p></section>
+</div>
+<div class="col">
+ <section class="panel"><h2>light-detection.ino (ESP32) <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
+  <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (LEDs for the corridor lights)</label></section>
+ <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
+  <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-python.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
+ <section class="panel"><h2>Live chart (last 60 readings)</h2><canvas class="ch" id="chart" width="900" height="260" role="img" aria-label="Line chart of light percent and raw ADC"></canvas></section>
+ <section class="panel calc"><h2>Do the map() maths yourself</h2><label>Raw ADC = <input id="cRaw" type="number" value="325"></label> <span class="note">(try 0, 325, 650, 800)</span><pre id="cOut"></pre></section>
+</div></div></div>
+<script>window.LESSON={name:"Lab 1 Light sensor virtual ESP32"};</script>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/ds-nav.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const P={low:650,dark:500,dim:300,bright:100,delay:500,led1:30,led2:60};
+// pure kit logic, used by the sketch AND by the checks
+function arduinoMap(x,a,b,c,d){return Math.trunc((x-a)*(d-c)/(b-a)+c)}
+function pct(raw,p){p=p||P;return Math.max(0,Math.min(100,arduinoMap(raw,p.low,0,0,100)))}
+function cond(raw,p){p=p||P;return raw>p.dark?["DARK","DARK (sensor covered or room lights off)","#334155"]:raw>p.dim?["DIM","DIM  (indoor shade or twilight)","#0891b2"]:raw>p.bright?["BRIGHT","BRIGHT (indoor light or cloudy daylight)","#d97706"]:["VERY BRIGHT","VERY BRIGHT (direct sunlight or torch)","#16a34a"]}
+let level=0,running=false,timer=null,vt=Date.now(),rows=[],hist=[],day=null,seen={vb:false,zero:false,fault:false,day:false};
+const log=(function(){try{return JSON.parse(localStorage.getItem("ds_ldr_log")||"[]")}catch(e){return[]}})();rows=log;$("nRows").textContent=rows.length;
+/* sketch with editable numbers */
+const F=(k,w)=>`<input class="yel" data-k="${k}" value="${P[k]}" inputmode="numeric" aria-label="${k}">`;
+function drawSketch(){const e=$("ext").checked;
+$("sketch").innerHTML=`<span class="cm">// DataSciensPro Kit - Light Detector (LDR)   ESP32 | Pin 36 | 9600 baud</span>
+<span class="kw">const int</span> LDR_PIN = 36;
+<span class="kw">int</span> lightValue = 0;${e?`
+<span class="kw">const int</span> LED_RED = 25, LED_YELLOW = 26, LED_GREEN = 27;`:""}
+
+<span class="kw">void</span> setup() {
+  Serial.begin(9600);${e?`
+  pinMode(LED_RED, OUTPUT); pinMode(LED_YELLOW, OUTPUT); pinMode(LED_GREEN, OUTPUT);`:""}
+  Serial.println(<span class="st">"------ Light Detector Sensor ------"</span>);
+}
+
+<span class="kw">void</span> loop() {
+  lightValue = analogRead(LDR_PIN);
+  <span class="cm">// inverted LDR: low raw value = bright</span>
+  <span class="kw">int</span> lightPercent = map(lightValue, ${F("low")}, 0, 0, 100);
+  lightPercent = constrain(lightPercent, 0, 100);
+  Serial.print(<span class="st">"Raw ADC: "</span>); Serial.print(lightValue); ...
+  <span class="kw">if</span> (lightValue > ${F("dark")}) {  Serial.println(<span class="st">"DARK ..."</span>); }
+  <span class="kw">else if</span> (lightValue > ${F("dim")}) {  Serial.println(<span class="st">"DIM ..."</span>); }
+  <span class="kw">else if</span> (lightValue > ${F("bright")}) {  Serial.println(<span class="st">"BRIGHT ..."</span>); }
+  <span class="kw">else</span> {  Serial.println(<span class="st">"VERY BRIGHT ..."</span>); }${e?`
+
+  <span class="cm">// extension: corridor lights from your Criterion B product</span>
+  digitalWrite(LED_RED, lightPercent &lt; ${F("led1")});    <span class="cm">// too dark: lights ON</span>
+  digitalWrite(LED_YELLOW, lightPercent &gt;= ${F("led1")} &amp;&amp; lightPercent &lt; ${F("led2")});
+  digitalWrite(LED_GREEN, lightPercent &gt;= ${F("led2")});  <span class="cm">// plenty of daylight</span>`:""}
+  delay(${F("delay")});
+}`;
+$("sketch").querySelectorAll("input.yel").forEach(i=>i.oninput=()=>{const v=parseInt(i.value,10);if(!isNaN(v)&&v>=0){P[i.dataset.k]=v;onParams()}})}
+$("ext").onchange=()=>{drawSketch();leds(lastRaw)};
+/* audio */
+let AC=null;function tone(f,d,type,v){if(!$("snd").checked)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,AC.currentTime);g.gain.exponentialRampToValueAtTime(v||.12,AC.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d+.02)}catch(e){}}
+const jingle=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.22,"triangle",.18),i*130));
+/* sensor model */
+function rawFor(L){const noise=+$("noise").value;let r=690*(1-L/100)+(Math.random()*2-1)*noise;if($("fault").checked&&Math.random()<.08)r=Math.random()<.5?4095:0;return Math.max(0,Math.round(r))}
+let lastRaw=null,lastCond="";
+function leds(raw){const on=$("ext").checked&&raw!=null;const p=raw==null?0:pct(raw);const set=(id,v,c)=>$(id).setAttribute("fill",on&&v?c:({ledR:"#512a2a",ledY:"#4d4520",ledG:"#1f4a30"})[id]);
+ set("ledR",p<P.led1,"#ff3b30");set("ledY",p>=P.led1&&p<P.led2,"#ffd60a");set("ledG",p>=P.led2,"#30d158")}
+function setLight(L){level=L;$("light").value=L;$("lvlTxt").textContent=Math.round(L)+" %";$("sun").setAttribute("fill",`hsl(40,${50+L/2}%,${35+L*0.3}%)`);$("sunGlow").setAttribute("opacity",(L/100*.9+.05).toFixed(2))}
+function reading(){const raw=rawFor(level),p=pct(raw),c=cond(raw);
+ vt+=P.delay;const ts=new Date(vt),pad=n=>String(n).padStart(2,"0");
+ const stamp=`${ts.getFullYear()}-${pad(ts.getMonth()+1)}-${pad(ts.getDate())} ${pad(ts.getHours())}:${pad(ts.getMinutes())}:${pad(ts.getSeconds())}`;
+ const line=`Raw ADC: ${raw}  |  Light %: ${p}%  |  Condition: ${c[1]}`;
+ const sm=$("serial");sm.textContent+=line+"\n";if(sm.textContent.length>16000)sm.textContent=sm.textContent.slice(-12000);sm.scrollTop=sm.scrollHeight;
+ rows.push([stamp,raw,p,c[0]]);if(rows.length>600)rows.shift();try{localStorage.setItem("ds_ldr_log",JSON.stringify(rows))}catch(e){}$("nRows").textContent=rows.length;
+ hist.push([p,raw]);if(hist.length>60)hist.shift();
+ $("vRaw").textContent=raw;$("vPct").textContent=p+"%";$("mPct").style.width=p+"%";$("vCond").textContent=c[0];$("vCond").style.background=c[2];
+ if(c[0]!==lastCond){tone({"DARK":196,"DIM":294,"BRIGHT":440,"VERY BRIGHT":660}[c[0]],.12,"sine",.08);lastCond=c[0]}
+ lastRaw=raw;leds(raw);$("clock").textContent="🕒 "+pad(ts.getHours())+":"+pad(ts.getMinutes());drawChart();
+ if(c[0]==="VERY BRIGHT")seen.vb=true;if(p===0&&raw<=P.low*1.1&&level<5)seen.zero=true;if(raw===4095||raw===0)seen.fault=true;
+ checkMissions()}
+function drawChart(){const cv=$("chart"),g=cv.getContext("2d"),W=cv.width,H=cv.height;g.clearRect(0,0,W,H);const cs=getComputedStyle(document.body);const ink=cs.getPropertyValue("--muted")||"#666",line=cs.getPropertyValue("--line")||"#ccc";
+ g.font="12px system-ui";g.fillStyle=ink;g.strokeStyle=line;g.lineWidth=1;
+ for(let i=0;i<=4;i++){const y=14+(H-34)*i/4;g.beginPath();g.moveTo(40,y);g.lineTo(W-46,y);g.stroke();g.fillText(100-i*25,6,y+4);g.fillText(Math.round(800-i*200),W-40,y+4)}
+ const n=hist.length;if(n<2)return;const X=i=>40+(W-86)*i/59;
+ g.lineWidth=2.4;g.strokeStyle="#0891b2";g.beginPath();hist.forEach((h,i)=>{const y=14+(H-34)*(1-h[0]/100);i?g.lineTo(X(i),y):g.moveTo(X(i),y)});g.stroke();
+ g.strokeStyle="#dc2626";g.setLineDash([6,4]);g.beginPath();hist.forEach((h,i)=>{const y=14+(H-34)*(1-Math.min(h[1],800)/800);i?g.lineTo(X(i),y):g.moveTo(X(i),y)});g.stroke();g.setLineDash([]);
+ g.fillStyle="#0891b2";g.fillText("Light %",48,12);g.fillStyle="#dc2626";g.fillText("Raw ADC (capped at 800 in chart)",110,12)}
+/* run / day */
+function stopAll(){running=false;clearInterval(timer);day=null;$("runBtn").disabled=false;$("dayBtn").disabled=false;$("stopBtn").disabled=true}
+let curFn=null;function startTimer(fn){curFn=fn;clearInterval(timer);const sp=+$("spd").value;timer=setInterval(fn,Math.max(15,P.delay/sp));running=true;$("runBtn").disabled=true;$("dayBtn").disabled=true;$("stopBtn").disabled=false}
+$("runBtn").onclick=()=>{tone(440,.1);startTimer(reading)};
+$("stopBtn").onclick=stopAll;
+$("dayBtn").onclick=()=>{tone(330,.1);day={i:0,n:144};vt=new Date().setHours(5,0,0,0);startTimer(()=>{const h=5+day.i/day.n*16;const sun=Math.max(0,Math.sin((h-6)/12*Math.PI));const cloud=1-0.35*(Math.sin(day.i/4.5)+1)/2*(h>9&&h<15?1:0.3);const L=Math.min(100,Math.max(0,(sun*95)*cloud+(h>17.5&&h<20.5?6:0)+ (h>=7&&h<=17?8:0)));setLight(L);reading();vt+=600000;day.i++;if(day.i>=day.n){stopAll();seen.day=true;checkMissions()}})};
+$("spd").onchange=()=>{if(running&&curFn){clearInterval(timer);timer=setInterval(curFn,Math.max(15,P.delay/+$("spd").value))}};
+document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{if(day)return;setLight(+b.dataset.p);tone(500+level*4,.08,"square",.05);if(!running)reading()});
+$("light").oninput=()=>{if(!day){setLight(+$("light").value)}};
+$("noise").oninput=()=>$("noiseV").textContent=$("noise").value;
+$("clr").onclick=()=>{$("serial").textContent="";rows=[];hist=[];try{localStorage.setItem("ds_ldr_log","[]")}catch(e){}$("nRows").textContent=0;drawChart()};
+$("csv").onclick=()=>{const t="Timestamp,Raw_ADC,Light_Percent,Condition\n"+rows.map(r=>r.join(",")).join("\n")+"\n";const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/csv"}));a.download="ldr_light_data.csv";a.click()};
+/* map maths */
+function calc(){const x=+$("cRaw").value;const v=(x-P.low)*(100-0),d=(0-P.low);const m=arduinoMap(x,P.low,0,0,100),cc=Math.max(0,Math.min(100,m));
+ $("cOut").textContent=`map(${x}, ${P.low}, 0, 0, 100) = (${x} - ${P.low}) x (100 - 0) / (0 - ${P.low}) + 0 = ${v} / ${d} = ${m}  (whole numbers only)\nconstrain(${m}, 0, 100) = ${cc} %   ->  condition: ${cond(x)[0]}`}
+$("cRaw").oninput=calc;
+/* missions */
+const M=[["Make the sensor report VERY BRIGHT","Press the Sunlight / torch preset, then Run.",()=>seen.vb],
+["Get 0 % with the sensor covered","Press Cover with hand and run. The raw value is above the map() low number.",()=>seen.zero],
+["Change a threshold so a raw reading of 250 counts as DIM","Which number decides DIM? Make it lower than 250.",()=>cond(250)[0]==="DIM"],
+["Calibrate map() so a raw reading of 400 gives about 50 %","Change the first number inside map(). Use the maths box to check.",()=>{const p=pct(400);return p>=48&&p<=52}],
+["Spot a faulty reading","Tick Loose wire fault and run until a 0 or 4095 appears. Real data has glitches like this, and you will clean them in Lab 2.",()=>seen.fault],
+["Play the whole day to the end","Press Play the whole day (25× is quick). Watch the Light % curve.",()=>seen.day]];
+let done=new Set(),posted=false;
+function drawMissions(){$("missions").innerHTML=M.map((m,i)=>`<div class="mission ${done.has(i)?"ok":""}"><span class="ic">${done.has(i)?"✔":"○"}</span><div><strong>${m[0]}</strong><small>${m[1]}</small></div></div>`).join("");$("mCount").textContent=done.size+" / "+M.length}
+function checkMissions(){let ch=false;M.forEach((m,i)=>{if(!done.has(i)&&m[2]()){done.add(i);ch=true}});if(ch){tone(784,.15,"triangle",.15);drawMissions()}
+ if(done.size===M.length&&!posted){posted=true;jingle();$("doneMsg").textContent="🎉 All missions complete!";try{const u=currentUser();if(u&&typeof postToSheet==="function"){postToSheet("quiz",{Name:u.name,Class:u.klass,Criterion:"C",Topic:"Light sensor",Lesson:"Lab 1 Virtual ESP32",Quiz:"Lab · Light sensor · Virtual ESP32",Score:6,Total:6,Percent:100,TimeTakenSec:0});$("doneMsg").textContent+=" Saved to your teacher's Google Sheet."}else $("doneMsg").textContent+=" Log in at the top to save it to the class Google Sheet."}catch(e){}}}
+function onParams(){calc();drawMissions();checkMissions();leds(lastRaw)}
+$("copyEv").onclick=()=>{const t=`Virtual ESP32 test evidence (simulator, not the physical kit)\nSketch settings: map(raw, ${P.low}, 0, 0, 100); DARK > ${P.dark}; DIM > ${P.dim}; BRIGHT > ${P.bright}; delay ${P.delay} ms\nMissions complete: ${done.size}/${M.length}\nLast 8 readings:\n`+$("serial").textContent.trim().split("\n").slice(-8).join("\n");try{navigator.clipboard.writeText(t);$("copySt").textContent="Copied. Paste it into your C3 log and say it is simulator evidence."}catch(e){$("copySt").textContent="Select and copy from the Serial Monitor instead."}};
+drawSketch();setLight(0);calc();drawMissions();drawChart();
+window.__ds={P,cond,pct,seen,done,M,reading,setLight,rows:()=>rows};
+})();
+</script></body></html>

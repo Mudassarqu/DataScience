@@ -1,0 +1,11 @@
+GRADE 9 DATA SCIENCE - CRITERION C ONLY (restored site)
+
+1. On GitHub create a new PUBLIC repository named  DataScience-Students  (same name = same web address:
+   https://mudassarqu.github.io/DataScience-Students/criteria-c.html )
+2. Add file > Upload files. Drag the CONTENTS of this folder (not the folder itself), or use the 3 batch zips
+   (batch1, batch2, batch3): unzip each and upload one after another. GitHub allows 100 files per upload.
+   Keep folder structure: assets/, assets/cimg/, downloads/, videos/, google-apps-script/.
+3. Settings > Pages > Source: Deploy from branch > main > /(root) > Save. Wait 1-2 minutes.
+4. Open  .../criteria-c.html . index.html simply forwards to it.
+5. Google Sheet: assets/config.js already holds your Apps Script /exec URL. google-apps-script/Code.gs is the same script
+   (only needed if you ever redeploy it). No Criteria A, B or D files are included.
