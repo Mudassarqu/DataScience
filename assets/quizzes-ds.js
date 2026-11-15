@@ -251,7 +251,7 @@ window.QUIZ_BANK={
       "Battery low"
      ],
      "c": 0,
-     "w": "Red is the too-dark state in your Criterion B design."
+     "w": "Red is the too-dark state in your design."
     }
    ],
    "fill": [

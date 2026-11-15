@@ -114,7 +114,7 @@ const M=[
  ["Run the B1 spec 7.1 test","Press Run the spec test. Read each trial in the table.",()=>seen.specRun],
  ["See why the design change matters","Run the spec test with the design change NOT fitted and note which check fails.",()=>seen.failNo],
  ["Fit the design change and meet spec 7.1","Tick the design change (C4), keep your calibrated numbers and run the test again.",()=>seen.pass],
- ["Add the Criterion B extension","Tick the extension box and watch the status lights change.",()=>seen.ext],
+ ["Add the extension","Tick the extension box and watch the status lights change.",()=>seen.ext],
  ["Play the whole scenario to the end","Press the Play button (25× is quick) and watch the chart.",()=>seen.scn]]);
 let done=new Set(),posted=false;
 function drawMissions(){$("missions").innerHTML=M.map((m,i)=>`<div class="mission ${done.has(i)?"ok":""}"><span class="ic">${done.has(i)?"✔":"○"}</span><div><strong>${esc(m[0])}</strong><small>${esc(m[1])}</small></div></div>`).join("");$("mCount").textContent=done.size+" / "+M.length}

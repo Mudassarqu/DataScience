@@ -37,7 +37,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (soundDb >= ${F("t1")}) zone = ${st('"ELEVATED_NOISE"')};
   ${kw("else")}                      zone = ${st('"QUIET_ZONE"')};
   Serial.print(${st('"Peak_to_Peak: "')}); Serial.print(peakToPeak); ...${e?`
-  ${cm("// extension: traffic-light status from your Criterion B product")}
+  ${cm("// extension: traffic-light status from your product")}
   digitalWrite(LED_GREEN, zone == QUIET); digitalWrite(LED_YELLOW, zone == ELEVATED); digitalWrite(LED_RED, zone == HAZARDOUS);`:""}
   delay(${F("delay")});
 }`,
@@ -69,7 +69,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (ppmIndex > ${F("t1")}) hazard = ${st('"MODERATE"')};
   ${kw("else")}                      hazard = ${st('"CLEAN"')};
   Serial.print(${st('"Raw ADC: "')}); Serial.print(rawADC); ...${e?`
-  ${cm("// extension: alert from your Criterion B product")}
+  ${cm("// extension: alert from your product")}
   digitalWrite(BUZZER, hazard == HAZARDOUS); digitalWrite(LED_RED, hazard == HAZARDOUS);`:""}
   delay(${F("delay")});
 }`,
@@ -95,7 +95,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (vibPercent >= ${F("t1")}) status = ${st('"BEARING_FATIGUE"')};
   ${kw("else")}                         status = ${st('"SMOOTH_NORMAL"')};
   Serial.print(${st('"Raw ADC: "')}); Serial.print(rawAdc); ...${e?`
-  ${cm("// extension: warning lights from your Criterion B product")}
+  ${cm("// extension: warning lights from your product")}
   digitalWrite(LED_RED, status == CRITICAL); digitalWrite(LED_YELLOW, status == FATIGUE);`:""}
   delay(${F("delay")});   ${cm("// fast sampling for shock transients")}
 }`,
@@ -123,7 +123,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (flamePercent >= ${F("t1")}) status = ${st('"WATCH"')};
   ${kw("else")}                           status = ${st('"CLEAR"')};
   Serial.print(${st('"Raw ADC: "')}); Serial.print(rawAdc); ...${e?`
-  ${cm("// extension: alarm from your Criterion B product")}
+  ${cm("// extension: alarm from your product")}
   digitalWrite(BUZZER, status == FLAME_ALARM); digitalWrite(LED_RED, status == FLAME_ALARM);`:""}
   delay(${F("delay")});
 }`,
@@ -205,7 +205,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (tempC >= ${F("t1")}) category = ${st('"WARM"')};
   ${kw("else")}                    category = ${st('"NORMAL"')};
   Serial.print(${st('"Temp C: "')}); Serial.print(tempC, 2); ...${e?`
-  ${cm("// extension: status lights from your Criterion B product")}
+  ${cm("// extension: status lights from your product")}
   digitalWrite(LED_RED, category == HOT); digitalWrite(LED_YELLOW, category == WARM);`:""}
   delay(${F("delay")});
 }`,
@@ -235,7 +235,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (h >= ${F("t1")}) status = ${st('"COMFORT"')};
   ${kw("else")}                status = ${st('"DRY_AIR"')};`}
   Serial.print(${st('"Humidity: "')}); Serial.print(h, 1); Serial.print(${st('" %  |  Temp C: "')}); Serial.print(t, 1); ...${e?`
-  ${cm("// extension: status lights from your Criterion B product")}
+  ${cm("// extension: status lights from your product")}
   digitalWrite(LED_RED, status == ALERT); digitalWrite(LED_GREEN, status == OK);`:""}
   delay(${F("delay")});
 }`},
@@ -264,7 +264,7 @@ ${kw("void")} loop() {
     ${kw("else if")} (velocity < ${F("t1")}) state = ${st('"LOW_SPEED_DECELERATION"')};
     ${kw("else")}                      state = ${st('"NOMINAL_TRAJECTORY"')};
     Serial.print(${st('"Duration_ms: "')}); Serial.print(durationMs, 2); ...${e?`
-    ${cm("// extension: lights from your Criterion B product")}
+    ${cm("// extension: lights from your product")}
     digitalWrite(LED_GREEN, state == NOMINAL); digitalWrite(LED_RED, state == HIGH);`:""}
   }
   delay(${F("delay")});
@@ -293,7 +293,7 @@ ${kw("void")} loop() {
   ${kw("else if")} (beatAvg > ${F("t2")})      status = ${st('"TACHYCARDIA_STRESS"')};
   ${kw("else if")} (beatAvg < ${F("t1")} && beatAvg > 0) status = ${st('"BRADYCARDIA"')};
   Serial.print(${st('"Raw IR: "')}); Serial.print(irValue); ...${e?`
-  ${cm("// extension: status lights from your Criterion B product")}
+  ${cm("// extension: status lights from your product")}
   digitalWrite(LED_GREEN, status == NORMAL); digitalWrite(LED_RED, status == TACHYCARDIA);`:""}
   delay(${F("delay")});
 }`,

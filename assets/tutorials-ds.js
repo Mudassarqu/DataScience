@@ -662,7 +662,7 @@ window.TUTORIALS=[
    },
    {
     "h": "Record what you did",
-    "say": "Cleaning changes your data, so record each step. Say what you removed, how many rows, and why. That is the evidence your Criterion C log and your Criterion D evaluation will need.",
+    "say": "Cleaning changes your data, so record each step. Say what you removed, how many rows, and why. That is the evidence your making log and your evaluation will need.",
     "code": "before = 100\nafter_range = 91\nafter_zscore = 90\nprint(\"range filter removed\", before - after_range)\nprint(\"z-score removed\", after_range - after_zscore)\nprint(\"kept\", after_zscore, \"of\", before)",
     "bullets": null,
     "norun": false,
@@ -922,7 +922,7 @@ window.TUTORIALS=[
    },
    {
     "h": "Stage 4: show and explain",
-    "say": "Report the findings in words with numbers. Then decide what it means for your design. Here the data supports lights switching on when the light is below about thirty percent. Your Criterion D evaluation makes exactly this kind of link.",
+    "say": "Report the findings in words with numbers. Then decide what it means for your design. Here the data supports lights switching on when the light is below about thirty percent. Your evaluation makes exactly this kind of link.",
     "code": "result = {\"mean_pct\": 42.3, \"counts\": {\"DARK\": 1, \"DIM\": 1, \"VERY BRIGHT\": 1}}\nprint(f\"Average light was {result['mean_pct']}%.\")\nprint(\"Dark readings:\", result[\"counts\"][\"DARK\"], \"of 3\")\nprint(\"Decision: switch the corridor lights on below 30%.\")",
     "bullets": null,
     "norun": false,
@@ -959,7 +959,7 @@ window.TUTORIALS=[
   "slides": [
    {
     "h": "A post that measures daylight",
-    "say": "School corridors and car parks in the UAE often keep their lights on all day because nobody measures the daylight. Your Sun-Tracker Post from Criterion B fixes that. A light sensor reads the sky, the ESP32 turns it into a number, and Python turns the numbers into a story.",
+    "say": "School corridors and car parks in the UAE often keep their lights on all day because nobody measures the daylight. Your Sun-Tracker Post fixes that. A light sensor reads the sky, the ESP32 turns it into a number, and Python turns the numbers into a story.",
     "code": null,
     "bullets": [
      "The LDR senses the light",
@@ -1009,7 +1009,7 @@ window.TUTORIALS=[
    },
    {
     "h": "What you will test",
-    "say": "Criterion B gave you specification 7.1: fewer than 2 wrong readings in a day. In Lab 1 you fit the lip and run the 12 spec checks. In Lab 2 you check two model days of data with Python. Write what you find in your C3 log and justify the lip in C4.",
+    "say": "Your design gave you specification 7.1: fewer than 2 wrong readings in a day. In Lab 1 you fit the lip and run the 12 spec checks. In Lab 2 you check two model days of data with Python. Write what you find in your C3 log and justify the lip in C4.",
     "code": null,
     "bullets": [
      "B1 7.1: fewer than 2 wrong readings",
