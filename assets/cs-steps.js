@@ -462,4 +462,127 @@ t("first", lambda: got["first"], ref["first"])
 t("share_pct", lambda: got["share_pct"], ref["share_pct"], True)
 t("A status that never happens gives 0 episodes", lambda: S["episode_report"](rows,"NEVER")["episodes"], 0)
 `,needDay:true});
+/* ---------- 7, 8, 9 challenge ladder: fill in the blanks, modify, write your own ---------- */
+const CH_HEAD=`LAB_COL, VAL_COL = ${q(Y.LAB)}, ${q(Y.VAL)}\nLABELS = ${JSON.stringify(Y.labels)}\n`;
+ST.push({id:"c_basic",title:"7 · Challenge BASIC: fill in the blanks",c:"C2",
+ goal:`<span class="lv basic">BASIC</span> The loop below counts how many cleaned readings had one status. Fill in the <strong>three blanks</strong> (<code>____</code>), then press <strong>Check my code</strong>. The cleaned rows from Step 2 are already in <code>clean_rows</code>. Pick the dataset (day without or with your design change) in the menu on the left.<ul class="tryit"><li><span class="lv basic">TASK</span> Count <code>${TOP}</code> readings. Write the count. Each reading is one sample.</li><li><span class="lv basic">THEN</span> Change the word in <code>target</code> to another status and run it again.</li></ul>`,
+ hints:[`Blank 1 is a status word from this list: <code>${Y.labels.join(", ")}</code>. Keep the quote marks.`,`Blank 2 is the symbol for "is equal to" in Python. It is two characters.`,`Blank 3: to add one to the count you write <code>count = count + 1</code>.`],
+ starter:CH_HEAD+`
+target = "____"          # <- blank 1: type one status word
+count = 0
+for r in clean_rows:
+    if r[LAB_COL] ____ target:      # <- blank 2: the symbol for "is equal to"
+        count = ____ + 1            # <- blank 3: add one to what?
+print(target, "readings:", count)
+`,
+ solution:CH_HEAD+`
+target = ${q(TOP)}          # <- change this word
+count = 0
+for r in clean_rows:
+    if r[LAB_COL] == target:
+        count = count + 1
+print(target, "readings:", count)
+`,
+ tests:`
+LAB_COL=${q(Y.LAB)}
+rows=S["clean_rows"]
+tg=S["target"]
+check("target is one of the status words", tg in ${JSON.stringify(Y.labels)}, "target=%r"%(tg,))
+exp=sum(1 for r in rows if r[LAB_COL]==tg)
+t("count is the number of rows with that status", lambda: S["count"], exp)
+check("Your code uses a for loop and an if", "for " in SRC and "if " in SRC, "")
+check("It printed the count", str(exp) in OUT, "")
+`});
+ST.push({id:"c_mod",title:"8 · Challenge MODERATE: modify the code",c:"C2",
+ goal:`<span class="lv moderate">MODERATE</span> This code already works and counts one status. <strong>Add your own lines</strong> at the end so it also works out <code>average</code> (the average of <code>${Y.VAL}</code> for those readings, rounded to 1 decimal place) and <code>first_time</code> (the clock time <code>HH:MM:SS</code> of the first reading with that status). Print both. Then press Check my code.<ul class="tryit"><li><span class="lv moderate">TASK</span> Use the status <code>${TOP}</code>. Write the count, average and first time.</li><li><span class="lv moderate">THEN</span> Change <code>target</code> to another status. Which status has the highest average?</li></ul>`,
+ hints:[`Inside the if, keep a running total: <code>total = total + r[VAL_COL]</code>. Start with <code>total = 0</code> before the loop.`,`After the loop: <code>average = round(total / count, 1)</code>. Take care if the count is 0.`,`For the time: <code>first_time = None</code> before the loop. Inside the if, <code>if first_time is None: first_time = r["Timestamp"][11:19]</code>.`],
+ starter:CH_HEAD+`
+target = ${q(TOP)}          # <- change this word
+count = 0
+for r in clean_rows:
+    if r[LAB_COL] == target:
+        count = count + 1
+print(target, "readings:", count)
+
+# YOUR CODE: also work out and print
+#   average    the average of VAL_COL for these readings (1 decimal place)
+#   first_time the time HH:MM:SS of the first reading with this status
+`,
+ solution:CH_HEAD+`
+target = ${q(TOP)}          # <- change this word
+count = 0
+total = 0
+first_time = None
+for r in clean_rows:
+    if r[LAB_COL] == target:
+        count = count + 1
+        total = total + r[VAL_COL]
+        if first_time is None:
+            first_time = r["Timestamp"][11:19]
+average = round(total / count, 1) if count else None
+print(target, "readings:", count)
+print("average:", average)
+print("first time:", first_time)
+`,
+ tests:`
+LAB_COL,VAL_COL=${q(Y.LAB)},${q(Y.VAL)}
+rows=S["clean_rows"]
+tg=S["target"]
+check("target is one of the status words", tg in ${JSON.stringify(Y.labels)}, "target=%r"%(tg,))
+sel=[r for r in rows if r[LAB_COL]==tg]
+t("count", lambda: S["count"], len(sel))
+exp_avg=round(sum(r[VAL_COL] for r in sel)/len(sel),1) if sel else None
+exp_first=sel[0]["Timestamp"][11:19] if sel else None
+t("average (1 decimal place)", lambda: S["average"], exp_avg, True)
+t("first_time (HH:MM:SS)", lambda: S["first_time"], exp_first)
+check("It printed the average and the first time", (str(exp_avg) in OUT) and (str(exp_first) in OUT), "")
+`});
+ST.push({id:"c_adv",title:"9 · Challenge ADVANCED: write your own code",c:"C2",
+ goal:`<span class="lv advanced">ADVANCED</span> Write the function <code>alert_after(rows, label, n)</code> yourself. It must return the <code>Timestamp</code> of the reading where <code>label</code> has been reported <strong>n times in a row</strong> for the first time. A different status in between resets the count. If it never happens it returns <code>None</code>. Press Check my code when it works.<ul class="tryit"><li><span class="lv advanced">TASK</span> Run it for <code>${TOP}</code> with n = 3 on the day <strong>without</strong> your design change and again <strong>with</strong> it. Write both times.</li><li><span class="lv advanced">THEN</span> Try n = 10. What does it return and why?</li></ul>`,
+ hints:[`Keep a variable <code>in_a_row = 0</code>. For each row: if the status is the label add 1, otherwise set it back to 0.`,`When <code>in_a_row == n</code> return <code>r["Timestamp"]</code> straight away.`,`After the loop ends without returning, <code>return None</code>.`],
+ starter:CH_HEAD+`
+def alert_after(rows, label, n):
+    """Return the Timestamp where label has appeared n times in a row for the first time.
+    Return None if it never happens. A different status resets the count."""
+    pass        # <- write your code here (replace this line)
+
+
+print(alert_after(clean_rows, ${q(TOP)}, 3))
+print(alert_after(clean_rows, ${q(TOP)}, 10))
+`,
+ solution:CH_HEAD+`
+def alert_after(rows, label, n):
+    in_a_row = 0
+    for r in rows:
+        if r[LAB_COL] == label:
+            in_a_row = in_a_row + 1
+        else:
+            in_a_row = 0
+        if in_a_row == n:
+            return r["Timestamp"]
+    return None
+
+
+print(alert_after(clean_rows, ${q(TOP)}, 3))
+print(alert_after(clean_rows, ${q(TOP)}, 10))
+`,
+ tests:`
+LAB_COL=${q(Y.LAB)}
+def _ref(rows,label,n):
+    k=0
+    for r in rows:
+        k=k+1 if r[LAB_COL]==label else 0
+        if k==n: return r["Timestamp"]
+    return None
+fake=[{"Timestamp":"t1",LAB_COL:"A"},{"Timestamp":"t2",LAB_COL:"B"},{"Timestamp":"t3",LAB_COL:"B"},{"Timestamp":"t4",LAB_COL:"A"},{"Timestamp":"t5",LAB_COL:"B"},{"Timestamp":"t6",LAB_COL:"B"},{"Timestamp":"t7",LAB_COL:"B"}]
+f=S["alert_after"]
+t("Tiny example: B three times in a row ends at t7", lambda: f(fake,"B",3), "t7")
+t("Tiny example: B two in a row first ends at t3", lambda: f(fake,"B",2), "t3")
+t("A broken run starts again (never 4 in a row)", lambda: f(fake,"B",4), None)
+t("Returns None when the status never appears", lambda: f(fake,"Z",1), None)
+rows=S["clean_rows"]
+for lab in ${JSON.stringify(Y.labels)}:
+    t("Your cleaned day: "+lab+", 3 in a row", lambda lab=lab: f(rows,lab,3), _ref(rows,lab,3))
+t("Your cleaned day: ${TOP}, 10 in a row", lambda: f(rows,${q(TOP)},10), _ref(rows,${q(TOP)},10))
+`});
 return ST};
