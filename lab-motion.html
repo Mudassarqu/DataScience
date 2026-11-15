@@ -31,7 +31,7 @@
 <div class="col">
  <section class="panel"><h2>motion-sensor.ino (ESP32) <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
   <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
-  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (security buzzer after long presence)</label></section>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the extension to loop() (security buzzer after long presence)</label></section>
  <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
   <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-python-motion.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
  <section class="panel"><h2>Live chart (last 60 readings)</h2><canvas class="ch" id="chart" width="900" height="260" role="img" aria-label="Chart of motion state and dwell time"></canvas></section>
@@ -70,7 +70,7 @@ $("sketch").innerHTML=`<span class="cm">// DataSciensPro Kit - PIR Motion (HC-SR
   }
   dwellDuration = (currentMotion == HIGH) ? millis() - motionStartTime : 0;
   lastMotionState = currentMotion;${e?`
-  <span class="cm">// extension: security alert from your Criterion B product</span>
+  <span class="cm">// extension: security alert from your product</span>
   digitalWrite(BUZZER_PIN, currentMotion == HIGH &amp;&amp; dwellDuration &gt; ${F("buz")});`:""}
 
   <span class="kw">if</span> (millis() - lastTelemetryTime >= TELEMETRY_INTERVAL) {

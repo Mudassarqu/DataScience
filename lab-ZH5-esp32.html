@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="assets/dspro.css">
 <style>.pic{position:relative;border:3px solid transparent;border-radius:12px;background:var(--chip);text-align:center;padding:6px}.pic img{max-width:100%;max-height:230px;border-radius:8px}.pic.fixed{border-color:#1b8a3d}.pic.hot:not(.fixed){border-color:#d97706}#specChecks{list-style:none;padding:0;margin:8px 0}#specChecks li{display:flex;gap:8px;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:var(--chip)}#specChecks li.ok{border-left:4px solid #1b8a3d}#specChecks li.no{border-left:4px solid #c62828}#specChecks small{display:block;color:var(--muted)}.dt tr.bad td{background:rgba(198,40,40,.12)}.b1q{background:var(--chip);border-left:4px solid #0891b2;padding:8px 10px;border-radius:8px;font-size:.92rem}</style></head><body>
 <div id="dsnav" data-tab="lab1" data-lesson="ZH5"></div>
-<div class="top"><div class="in"><div><span class="tag">ZH5 Soil Temperature for Crops · C2 Technical skills · Virtual hardware</span><h1>Lab 1 · Virtual ESP32 + Soil Thermo Stake</h1></div><p>The real kit sketch for the Waterproof temperature probe (DS18B20) runs here inside your Criterion B design. Edit the yellow numbers, change the real world with the slider and test your design against your own B1 function spec. No kit needed.</p></div></div>
+<div class="top"><div class="in"><div><span class="tag">ZH5 Soil Temperature for Crops · C2 Technical skills · Virtual hardware</span><h1>Lab 1 · Virtual ESP32 + Soil Thermo Stake</h1></div><p>The real kit sketch for the Waterproof temperature probe (DS18B20) runs here inside your design. Edit the yellow numbers, change the real world with the slider and test your design against your own B1 function spec. No kit needed.</p></div></div>
 <div class="loginbar" id="loginbar"><span>👋 Enter your name and class to save your lab results to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class, for example 9A" autocomplete="off"><button class="btn sm" id="loginBtn">Save</button><span id="loginSt" class="note"></span></div>
 <div class="wrapx"><div class="g2">
 <div class="col">
@@ -35,7 +35,7 @@
 <div class="col">
  <section class="panel"><h2>temperature-probe.ino (ESP32) in your product <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
   <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
-  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (status LEDs for your product)</label></section>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the extension to loop() (status LEDs for your product)</label></section>
  <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
   <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-ZH5-python.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
  <section class="panel"><h2>B1 function spec 7.1 test</h2>

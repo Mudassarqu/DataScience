@@ -34,7 +34,7 @@
 <div class="col">
  <section class="panel"><h2>light-detection.ino (ESP32) <span class="links" style="color:#a87a00">yellow = you can edit</span></h2>
   <div class="sketch" id="sketch" aria-label="Arduino sketch with editable numbers"></div>
-  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the Criterion B extension to loop() (LEDs for the corridor lights)</label></section>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext"> ⚡ Add the extension to loop() (LEDs for the corridor lights)</label></section>
  <section class="panel"><h2>Serial Monitor (9600 baud) <span class="links"><button class="btn alt sm" id="clr">Clear</button> <button class="btn alt sm" id="csv">⬇ Download CSV</button></span></h2><div class="serial" id="serial" role="log" aria-live="off"></div>
   <p class="note" style="margin:6px 0 0"><span id="nRows">0</span> readings saved. <a href="lab-python.html">Open them in Lab 2 · Python data lab →</a> <button class="btn alt sm" id="copyEv">Copy test evidence</button> <span class="status" id="copySt"></span></p></section>
  <section class="panel"><h2>Live chart (last 60 readings)</h2><canvas class="ch" id="chart" width="900" height="260" role="img" aria-label="Line chart of light percent and raw ADC"></canvas></section>
@@ -77,7 +77,7 @@ $("sketch").innerHTML=`<span class="cm">// DataSciensPro Kit - Light Detector (L
   <span class="kw">else if</span> (lightValue > ${F("bright")}) {  Serial.println(<span class="st">"BRIGHT ..."</span>); }
   <span class="kw">else</span> {  Serial.println(<span class="st">"VERY BRIGHT ..."</span>); }${e?`
 
-  <span class="cm">// extension: corridor lights from your Criterion B product</span>
+  <span class="cm">// extension: corridor lights from your product</span>
   digitalWrite(LED_RED, lightPercent &lt; ${F("led1")});    <span class="cm">// too dark: lights ON</span>
   digitalWrite(LED_YELLOW, lightPercent &gt;= ${F("led1")} &amp;&amp; lightPercent &lt; ${F("led2")});
   digitalWrite(LED_GREEN, lightPercent &gt;= ${F("led2")});  <span class="cm">// plenty of daylight</span>`:""}

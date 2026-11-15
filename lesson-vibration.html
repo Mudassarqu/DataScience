@@ -24,17 +24,10 @@ table.ed input:focus,table.ed textarea:focus,table.ed select:focus{border-color:
 @media print{.topbar,.lessontabs,.loginbar,.jump,.noprint,.top{display:none!important}body{background:#fff}.panel{box-shadow:none;break-inside:avoid}}
 </style></head><body>
 <div id="dsnav" data-tab="plan" data-lesson="vibration"></div>
-<div class="top"><div class="in"><div><span class="tag">MYP Design · Criterion C · Creating the solution</span><h1>📳 Vibration Sensor: plan, build, log, justify</h1></div><p>Follow your Criterion B plan with the DataSciensPro kit. Everything you write here is saved in your browser, and you can print or download it for your portfolio.</p></div></div>
+<div class="top"><div class="in"><div><span class="tag">MYP Design · Criterion C · Creating the solution</span><h1>📳 Vibration Sensor: plan, build, log, justify</h1></div><p>Follow your plan with the DataSciensPro kit. Everything you write here is saved in your browser, and you can print or download it for your portfolio.</p></div></div>
 <div class="loginbar" id="loginbar"><span>👋 Enter your name and class to send your C1–C4 work to the class Google Sheet:</span><input id="loginName" type="text" placeholder="Your name" autocomplete="off"><input id="loginClass" type="text" placeholder="Class (e.g. 9B)" autocomplete="off"><button onclick="doLogin()">Start / Log in</button></div>
 <div class="wrapx" style="max-width:1100px"><div class="col" style="gap:16px">
-<div class="jump noprint"><a href="#how">How C links to B</a><a href="#c1">C1 Plan</a><a href="#c2">C2 Technical skills</a><a href="#c3">C3 Making log</a><a href="#c4">C4 Changes</a><a href="#rubric">Rubric</a><a href="#tests">Test results</a><button class="btn alt sm" onclick="window.print()">🖨 Print / save as PDF</button><a class="btn alt sm" href="downloads/G9_DS_CriterionC_Summative_Booklet_Vibration_Sensor.docx" download>⬇ Summative booklet (Word)</a><button class="btn alt sm" id="dlAll">⬇ Download everything (.md)</button></div>
-
-<section class="panel sec" id="how"><h2>How Criterion C connects to Criterion B</h2>
-<div class="tw"><table class="ed"><tr><th>Criterion B gave you…</th><th>…so in Criterion C you…</th><th>Where</th></tr>
-<tr><td>B1 specification and success criteria</td><td>test your sensor and code against each criterion (C3, C4)</td><td><a href="#tests">Test results</a></td></tr>
-<tr><td>B3 chosen design (your chosen design from Criterion B)</td><td>compare your final product with it (C4)</td><td><a href="#c4">C4</a></td></tr>
-<tr><td>B4 circuit, flowchart, pseudocode</td><td>turn them into the Arduino sketch and Python program, and a plan (C1, C2)</td><td>your kit sketch and Python scripts</td></tr></table></div>
-<p class="note">Every example row is a model to edit. Replace it with your own chosen design from Criterion B.</p></section>
+<div class="jump noprint"><a href="#c1">C1 Plan</a><a href="#c2">C2 Technical skills</a><a href="#c3">C3 Making log</a><a href="#c4">C4 Changes</a><a href="#rubric">Rubric</a><a href="#tests">Test results</a><button class="btn alt sm" onclick="window.print()">🖨 Print / save as PDF</button><a class="btn alt sm" href="downloads/G9_DS_CriterionC_Summative_Booklet_Vibration_Sensor.docx" download>⬇ Summative booklet (Word)</a><button class="btn alt sm" id="dlAll">⬇ Download everything (.md)</button></div>
 
 <section class="panel sec" id="c1"><h2>C1 · Logical plan <span class="ex">EXEMPLAR · edit every cell</span></h2>
 <p style="margin-top:0">List the major tasks and sub-tasks, the resources, and the minutes for learning, building, debugging and testing. A classmate should be able to follow it.</p>
@@ -59,7 +52,7 @@ table.ed input:focus,table.ed textarea:focus,table.ed select:focus{border-color:
 <div id="logs"></div></section>
 
 <section class="panel sec" id="c4"><h2>C4 · Justifying changes</h2>
-<p style="margin-top:0">Compare your final product with the Criterion B chosen design and your first plan. Describe each change and justify it with <strong>evidence</strong> (a reading, a chart, a test result).</p>
+<p style="margin-top:0">Compare your final product with the chosen design and your first plan. Describe each change and justify it with <strong>evidence</strong> (a reading, a chart, a test result).</p>
 <div class="tw"><table class="ed" id="chT"><thead><tr><th style="width:26%">Original plan / design (B3, C1)</th><th style="width:26%">Final product</th><th style="width:38%">Reason for the change, with evidence</th><th style="width:4%"></th></tr></thead><tbody></tbody></table></div>
 <div class="row" style="margin-top:8px"><button class="btn alt sm" id="addCh">+ Add change</button><button class="btn sm noprint" data-send="C4">Send C4 to my teacher</button><span class="status" id="st-C4"></span></div>
 <p class="note">Strong example: <em>Original: lights stay on only while the PIR is HIGH. Final: lights stay on for the longest visit plus 2 s. Reason: Lab 2 showed 14 visits, median 2 s and longest 8 s, so the lights would have switched off 14 times in 120 s; a 10 s timer would switch them off only after the last visit.</em> (made-up numbers to show the style)</p></section>
