@@ -48,7 +48,7 @@ textarea.ans{width:100%;min-height:70px;box-sizing:border-box;border:2px solid v
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const STEPS=DS_STEPS_PIR;let cur=0,ready=false,hints=0,solSeen=false,dsKey="kit",cleaned=null,cleanForSteps={};
 const HDR='("Timestamp","Elapsed_Seconds","Motion_State","State_Label","Dwell_Time_ms","Status")';
-let prog={};try{prog=JSON.parse(localStorage.getItem("ds_lab2_pir")||"{}")}catch(e){}const saveP=()=>{try{localStorage.setItem("ds_lab2_pir",JSON.stringify(prog))}catch(e){}};
+let prog={};try{prog=JSON.parse(localStorage.getItem("ds_lab2v2_pir")||"{}")}catch(e){}const saveP=()=>{try{localStorage.setItem("ds_lab2v2_pir",JSON.stringify(prog))}catch(e){}};
 function data(){if(dsKey==="kit")return DS_PIR_KIT;if(dsKey==="messy")return DS_PIR_MESSY;try{const r=JSON.parse(localStorage.getItem("ds_pir_log")||"[]");return r.length?r:[]}catch(e){return[]}}
 const num=x=>{const v=parseFloat(x);return x===""||x==null||isNaN(v)?null:v};
 function pre(){return `import json as _j; RAW=[dict(zip(${HDR},_r)) for _r in _j.loads(r'${JSON.stringify(data()).replace(/'/g,"")}')]\n`}
