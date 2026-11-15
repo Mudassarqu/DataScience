@@ -56,3 +56,5 @@ window.DS_STEPS_PIR=[
 "tests": "\nrows=S[\"clean_rows\"]\ndef _el(rs):\n    L=[];run=0\n    for r in rs:\n        if r[\"Motion_State\"]==1: run+=1\n        else:\n            if run>0:L.append(run)\n            run=0\n    if run>0:L.append(run)\n    return L\nt(\"event_lengths on your data\", lambda: S[\"event_lengths\"](rows), _el(rows))\nt(\"event_lengths keeps the last open visit\", lambda: S[\"event_lengths\"]([{\"Motion_State\":0},{\"Motion_State\":1},{\"Motion_State\":1}]), [2])\nt(\"short visits give SHORT_TIMER\", lambda: S[\"decide_timer\"]([1,2,3]), (\"SHORT_TIMER\",5))\nt(\"long visits give LONG_TIMER\", lambda: S[\"decide_timer\"]([4,6,9]), (\"LONG_TIMER\",11))\nt(\"no events\", lambda: S[\"decide_timer\"]([]), (\"NO_DATA\",0))\n"
 }
 ];
+
+window.DS_STEPS_PIR.forEach(function(s){if(s.solution){s.starter=s.solution;s.goal=String(s.goal).replace(/Finish <code>/g,"Read <code>")+'<p style="margin:6px 0 0"><strong>This code already works.</strong> Press <strong>Just run it</strong> first. Then change one number or word, run again, and see what changes.</p>'}});

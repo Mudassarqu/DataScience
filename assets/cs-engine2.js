@@ -2,7 +2,7 @@
 (function(){
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const Y=CSL.py,STEPS=CS_BUILD(CSL),HDR=JSON.stringify(Y.cols);
-const KEYL="ds_cs_"+CSL.code+"_log",KEYP="ds_cs_"+CSL.code+"_lab2";
+const KEYL="ds_cs_"+CSL.code+"_log",KEYP="ds_cs_"+CSL.code+"_lab2v2";
 let cur=0,ready=false,hints=0,solSeen=false,dsKey="day",cleaned=null,cleanForSteps={};
 let prog={};try{prog=JSON.parse(localStorage.getItem(KEYP)||"{}")}catch(e){}const saveP=()=>{try{localStorage.setItem(KEYP,JSON.stringify(prog))}catch(e){}};
 function data(){if(dsKey==="day")return CSL.DAY;if(dsKey==="dayfix")return CSL.DAYFIX;if(dsKey==="messy")return CSL.MESSY;try{return JSON.parse(localStorage.getItem(KEYL)||"[]")}catch(e){return[]}}
@@ -12,8 +12,11 @@ async function preWithClean(){const key=dsKey+data().length;if(!cleanForSteps[ke
  return pre().replace(/\n$/,"")+`; clean_rows=_j.loads(r'''${cleanForSteps[key].replace(/'/g,"")}''')\n`}
 function drawSteps(){$("steps").innerHTML=STEPS.map((s,i)=>`<button role="tab" class="${i===cur?"on":""}" data-i="${i}"><span class="d">${prog[s.id]&&prog[s.id].done?"✔":"○"}</span>${esc(s.title)}</button>`).join("");$("steps").querySelectorAll("button").forEach(b=>b.onclick=()=>show(+b.dataset.i))}
 function gut(){const c=$("code"),n=c.value.split("\n").length;let s="";for(let i=1;i<=n;i++)s+=i+"\n";$("gutter").textContent=s;$("gutter").scrollTop=c.scrollTop}
+function hl(){const c=$("code"),h=$("hlin");if(!h)return;const L=c.value.split("\n");h.innerHTML=L.map(l=>{const k=l.indexOf("# <-");if(k<0)return esc(l);let a=l.slice(0,k),b=l.slice(k);
+  return esc(a).replace(/(^|[^\w.])(\d+(?:\.\d+)?)(?![\w.])|("[^"]*")|(statistics\.(?:median|mean))/g,(x,p,n,q,f)=>n?p+'<mark>'+n+'</mark>':q?'<mark>'+q+'</mark>':'<mark>'+f+'</mark>')+esc(b)}).join("\n")+"\n";h.style.transform="translate("+(-c.scrollLeft)+"px,"+(-c.scrollTop)+"px)"}
+(function(){const c=$("code"),w=document.createElement("div");w.className="cw";c.parentNode.insertBefore(w,c);const p=document.createElement("pre");p.className="hl";p.setAttribute("aria-hidden","true");p.innerHTML='<code id="hlin"></code>';w.appendChild(p);w.appendChild(c)})();
 function show(i){cur=i;const s=STEPS[i];if(s.needDay&&dsKey!=="day"&&dsKey!=="dayfix"){dsKey="day";$("dsel").value="day";cleaned=null;tableRows();$("dnote").textContent=NOTES.day}hints=0;solSeen=false;$("sTitle").textContent=s.title+"   ("+s.c+")";$("sGoal").innerHTML="<p style='margin:0'>"+s.goal+"</p>";$("hintBox").innerHTML="";
- $("code").value=(prog[s.id]&&prog[s.id].code)||s.starter;gut();$("out").textContent="Run your code to see the output here.";
+ $("code").value=(prog[s.id]&&prog[s.id].code)||s.starter;gut();hl();$("out").textContent="Run your code to see the output here.";
  $("checks").innerHTML='<li class="wait"><span class="ic">·</span><div>Press “Check my code”.</div></li>';$("score").innerHTML="";$("win").innerHTML="";drawSteps()}
 function tableRows(){const d=data();$("dcount").textContent=d.length+" rows";if(!d.length){$("dtab").innerHTML="<tr><td>No Lab 1 readings yet. Go to Lab 1, press the Play button, then come back.</td></tr>";return}
  $("dtab").innerHTML="<tr>"+Y.cols.map(c=>`<th>${esc(c)}</th>`).join("")+"</tr>"+d.slice(0,150).map(r=>{const raw=num(r[1]),v=num(r[2]);const bad=raw==null||v==null||!String(r[3]||"").trim()||raw<Y.lo||raw>Y.hi;return `<tr class="${bad?"bad":""}">`+[0,1,2,3].map(j=>`<td>${esc(r[j])}</td>`).join("")+"</tr>"}).join("")}
@@ -41,7 +44,7 @@ const COL=["#16a34a","#d97706","#dc2626"];
 function drawFigs(){if(!cleaned||!cleaned.length)return;const raw=data().map(r=>({ts:r[0],raw:num(r[1])}));
  const VN=Y.VAL.replace(/_/g," "),RN=Y.RAW.replace(/_/g," ");
  $("figst").textContent=cleaned.length+" clean rows";
- $("figs").innerHTML='<div class="charts">'+cv("f0","Figure 1: "+RN+". Red crosses were removed by your clean().")+cv("f1","Figure 2: "+VN+" over time with your 5-sample moving average. Dotted lines are your sketch thresholds.")+cv("f2","Figure 3: how often each status was reported.")+cv("f3","Figure 4: distribution of "+VN+" with mean and median.")+"</div>";
+ $("figs").innerHTML='<div class="charts">'+cv("f0","Figure 1: "+RN+". Red crosses were removed by your clean().")+cv("f1","Figure 2: "+VN+" over time with your moving average (dashed). Dotted lines are your sketch thresholds.")+cv("f2","Figure 3: how often each status was reported.")+cv("f3","Figure 4: distribution of "+VN+" with mean and median.")+"</div>";
  const T=n=>document.getElementById(n);const vals=cleaned.map(r=>r[Y.VAL]);
  {const c=T("f0"),g=c.getContext("2d"),W=c.width,H=c.height;const rv=raw.map(r=>r.raw).filter(v=>v!=null);const cap=Math.max(...cleaned.map(r=>r[Y.RAW]))*1.15;const ymax=Math.max(cap,1),ymin=Math.min(0,...cleaned.map(r=>r[Y.RAW]));axes(g,W,H,"sample number",ymin,ymax);
   let k=0;const keep=new Set();raw.forEach((r,i)=>{if(k<cleaned.length&&cleaned[k].Timestamp===r.ts&&Math.abs(cleaned[k][Y.RAW]-(r.raw==null?-9e9:r.raw))<1e-6){keep.add(i);k++}});
@@ -63,9 +66,9 @@ function drawFigs(){if(!cleaned||!cleaned.length)return;const raw=data().map(r=>
 $("checkBtn").onclick=()=>run(true);$("runBtn").onclick=()=>run(false);
 $("hintBtn").onclick=()=>{const s=STEPS[cur];if(hints<s.hints.length)hints++;$("hintBox").innerHTML=s.hints.slice(0,hints).map((h,i)=>`<div class="hint"><strong>Hint ${i+1}:</strong> ${h}</div>`).join("")};
 $("solBtn").onclick=()=>{if(!solSeen&&!confirm("Show the solution? Try the hints first. You can still complete the step, but it will not be sent to the Google Sheet."))return;solSeen=true;$("hintBox").innerHTML='<div class="hint"><strong>Solution</strong><pre style="background:var(--code-bg);color:var(--code-ink);padding:10px;border-radius:8px;overflow:auto;margin:6px 0 0">'+esc(STEPS[cur].solution)+"</pre></div>"};
-$("resetBtn").onclick=()=>{if(confirm("Put the starter code back?")){const s=STEPS[cur];$("code").value=s.starter;if(prog[s.id])delete prog[s.id].code;saveP();gut()}};
-$("code").addEventListener("input",gut);$("code").addEventListener("scroll",()=>{$("gutter").scrollTop=$("code").scrollTop});
-$("code").addEventListener("keydown",e=>{if(e.key==="Tab"){e.preventDefault();const c=$("code"),a=c.selectionStart;c.value=c.value.slice(0,a)+"    "+c.value.slice(c.selectionEnd);c.selectionStart=c.selectionEnd=a+4;gut()}if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();run(true)}});
+$("resetBtn").onclick=()=>{if(confirm("Put the starter code back?")){const s=STEPS[cur];$("code").value=s.starter;if(prog[s.id])delete prog[s.id].code;saveP();gut();hl()}};
+$("code").addEventListener("input",()=>{gut();hl()});$("code").addEventListener("scroll",()=>{$("gutter").scrollTop=$("code").scrollTop;hl()});
+$("code").addEventListener("keydown",e=>{if(e.key==="Tab"){e.preventDefault();const c=$("code"),a=c.selectionStart;c.value=c.value.slice(0,a)+"    "+c.value.slice(c.selectionEnd);c.selectionStart=c.selectionEnd=a+4;gut();hl()}if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();run(true)}});
 const NOTES={day:"Model data: one day made by the Lab 1 simulator WITHOUT your C4 design change, with the faults a real kit produces added. It is not from a real sensor.",dayfix:"Model data: the same day WITH your C4 design change fitted. It is not from a real sensor.",messy:"Synthetic practice data made with a different random seed, full of faults. Use it to test that your clean() is robust.",lab1:"The readings you recorded in Lab 1 on this device."};
 $("dsel").onchange=()=>{dsKey=$("dsel").value;cleaned=null;$("figs").innerHTML='<div class="lock">🔒 Pass <strong>Step 2 · Clean</strong> again with this dataset to redraw the figures.</div>';tableRows();$("dnote").textContent=NOTES[dsKey]};
 ["q1","q2","q3"].forEach(q=>{try{$(q).value=localStorage.getItem("ds_cs_"+CSL.code+"_"+q)||""}catch(e){}});

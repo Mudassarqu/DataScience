@@ -289,3 +289,6 @@ t("Returns None when a condition is missing", lambda: S["suggest_threshold"](row
 t("Result is a whole number", lambda: isinstance(S["suggest_threshold"](rows,"DARK","DIM"),int) or S["suggest_threshold"](rows,"DARK","DIM") is None, True)
 `}
 ];
+
+/* Working starter code: no blanks. Students run it, then change numbers. */
+window.DS_STEPS.forEach(function(s){if(s.solution){s.starter=s.solution;s.goal=String(s.goal).replace(/Finish <code>/g,"Read <code>")+'<p style="margin:6px 0 0"><strong>This code already works.</strong> Press <strong>Just run it</strong> first. Then change one number or word, run again, and see what changes.</p>'}});

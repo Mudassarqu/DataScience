@@ -262,3 +262,15 @@ canvas.ch{width:100%;height:230px;display:block;background:var(--panel);border-r
 .calc input{font:inherit;width:6em;padding:4px 8px;border:2px solid var(--line);border-radius:6px}
 .calc pre{background:var(--chip);border-radius:8px;padding:10px;margin:8px 0 0;overflow:auto;font:13px/1.6 Consolas,Menlo,monospace}
 .note{color:var(--muted);font-size:.88rem}
+
+/* Lab 2 yellow editable values (like the Arduino editor) */
+.editor .cw{position:relative;flex:1 1 0;min-width:0;display:flex}
+.editor .cw pre.hl{position:absolute;inset:0;margin:0!important;padding:12px 12px 12px 6px!important;overflow:hidden!important;pointer-events:none;font:13px/1.55 Consolas,Menlo,monospace!important;white-space:pre!important;border-radius:0!important;color:transparent!important;background:transparent!important;border:0!important;tab-size:4}
+.editor .cw pre.hl code{display:block;padding:0!important;margin:0!important;border:0!important;font:inherit;color:transparent!important;background:transparent!important}
+.editor .cw pre.hl mark{background:#facc1559;color:transparent;border-radius:3px;box-shadow:0 0 0 1px #facc15}
+.editor .cw textarea.code{position:relative;z-index:1}
+.ed{background:#facc1566;border-bottom:2px solid #facc15;border-radius:3px;padding:0 4px;font-weight:700}
+ul.tryit{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+ul.tryit li{background:var(--chip);border:1px solid var(--line);border-radius:9px;padding:7px 10px}
+.lv{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.04em;border-radius:6px;padding:1px 7px;margin-right:6px;color:#111}
+.lv.basic{background:#bbf7d0}.lv.moderate{background:#fde68a}.lv.advanced{background:#bfdbfe}
